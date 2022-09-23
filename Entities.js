@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
-
+//main player character
 const Knight = (props) => {
   return (
     <View>
@@ -11,7 +11,8 @@ const Knight = (props) => {
   </View>
   );
 }
-//test
+
+
 
 const Food = () => {
     return (
