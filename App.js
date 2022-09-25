@@ -5,9 +5,15 @@ import { GameEngine } from "react-native-game-engine";
 
 
 function Gameloop(entities, { touches })  {
+
+  let playerX = (entities['knight'].core.update())[0]
+  let playerY = (entities['knight'].core.update())[1]
+//playerX and playerY are both indeed 400
+
   for (let id in entities) {
-    entities[id].core.update();
+    entities[id].core.update(parseInt(playerX), parseInt(playerY));
   }
+  
 return entities
 }
 
@@ -52,7 +58,7 @@ var ents = {
 
 export default function App() {
 
-  //Thank you Will, ok possibly not thank you
+  //Thank you Will
 
   return (
     <GameEngine
