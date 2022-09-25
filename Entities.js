@@ -19,9 +19,11 @@ class Knight{
     //console.log("Knight runs");
 
 }
-update(){
-  //we call update on every entity so we something to run for knight
+update(playerX, playerY){
+  return [this.x, this.y]
 }
+  //we call update on every entity so we something to run for knight
+
 }
 
 class Brick {
@@ -39,33 +41,52 @@ class Brick {
     //console.log("Brick constructor runs")
   }
 
-  update() {
-    //console.log("Brick update runs")
-    
+  update(playerX, playerY) {
+    playerX = parseInt(playerX)
+    playerY = parseInt(playerY)
+    //its more efficient to put this inside the function call
+
+
     //If the projectiles start at 0 they get stuck
-    //Bouncing:
-    if(this.x >= MAXheight){
-      this.velocityX = (this.velocityX * -1)
-      this.velocityY = (this.velocityY * -1)
+    //Bouncing off walls:
+    if(this.x >= (MAXwidth - this.width)){
+      this.reverse()
     }
     if(this.x <= 0){
-      this.velocityX = (this.velocityX * -1)
-      this.velocityY = (this.velocityY * -1)
+      this.reverse()
     }
-    if(this.y >= MAXheight){
-      this.velocityX = (this.velocityX * -1)
-      this.velocityY = (this.velocityY * -1)
+    if(this.y >= (MAXheight - this.height)){
+      this.reverse()
     }
     if(this.y <= 0){
-      this.velocityX = (this.velocityX * -1)
-      this.velocityY = (this.velocityY * -1)
+      this.reverse()
     }
+    
+
+    //check for intersections with the player
+//define playerX and playerY somehow
+// global or passed into the update function
+
+    if(this.y + this.width < playerY  || this.y > playerY + 200){
+    }
+    else if(this.x > playerX +200 || this.x + this.width < playerX ){
+
+    }
+    else{
+      this.reverse()
+    }
+
 
     this.x += this.velocityX;
     this.y += this.velocityY;
 
     
 
+  }
+
+  reverse() {
+    this.velocityX = (this.velocityX * -1)
+    this.velocityY = (this.velocityY * -1)
   }
 }
 
