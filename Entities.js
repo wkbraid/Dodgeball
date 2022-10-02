@@ -1,11 +1,47 @@
-import React, { Component, } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import { Dimensions } from 'react-native';
+import { Dimensions, Keyboard } from 'react-native';
+import { React, Component, useEffect } from 'react';
+
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
+let counter = 0
 //if we want the screen to turn in game then this should be 
 //called in the loop
+// eventType onKeyDown 'w'
+
+
+/*useEffect(() => {
+  document.addEventListener('keydown',detectKeyDown, true)
+  }, [])
+  
+  const detectKeyDown = (e) => {
+  console.log("key pressed: ",)
+  }*/
+
+/*useEffect(() => {
+  document.addEventListener('keydown',detectKeyDown, true)
+  }, [])
+
+  const detectKeyDown = (e) => {
+  console.log("key pressed: ",e.key)
+  }
+*/
+
+const Counter = () => {
+  console.log({counter})
+} 
+
+const Move = (props) => {
+  return(
+//how do I check for key input
+props.x += 5,
+//props.x -= 5,
+//props.y += 5,
+//props.x -=5,
+console.log("Move runs")
+    );
+} 
 
 //main player character
 class Knight{
@@ -16,15 +52,17 @@ class Knight{
     this.x = 400;
     this.y = 400;
     this.velocity = [0,0];
-    //console.log("Knight runs");
 
 }
+
+
 update(playerX, playerY){
-  return [this.x, this.y]
+  return [this.x, this.y,]
 }
   //we call update on every entity so we something to run for knight
 
 }
+
 
 class Brick {
   constructor(x, y) {
@@ -38,14 +76,9 @@ class Brick {
 
     this.velocityX = randomNum;
     this.velocityY = 3 - randomNum;
-    //console.log("Brick constructor runs")
   }
 
   update(playerX, playerY) {
-    playerX = parseInt(playerX)
-    playerY = parseInt(playerY)
-    //its more efficient to put this inside the function call
-
 
     //If the projectiles start at 0 they get stuck
     //Bouncing off walls:
@@ -62,11 +95,10 @@ class Brick {
       this.reverse()
     }
     
-
     //check for intersections with the player
-//define playerX and playerY somehow
-// global or passed into the update function
-
+//the 200 is the height and width of the player,
+//hardcoded so that we dont need to pass it every time
+//remember to change this if you change player dimensions!
     if(this.y + this.width < playerY  || this.y > playerY + 200){
     }
     else if(this.x > playerX +200 || this.x + this.width < playerX ){
@@ -74,6 +106,7 @@ class Brick {
     }
     else{
       this.reverse()
+      counter += 1
     }
 
 
@@ -103,10 +136,9 @@ class Circle {
     }
   
   update() {
-    //console.log("Circle update runs");
     this.x += this.velocityX;
     this.y += this.velocityY;
-    //Move(this)
+    this.Move()
   } 
 }
   /*let x = entity.velocity[0]
@@ -120,4 +152,4 @@ class Circle {
   // if that makes it faster or something
 
 
-export {Knight, Circle, Brick,};
+export {Knight, Circle, Brick, Counter, Move, };
