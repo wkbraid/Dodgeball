@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
-import { React, Component, useEffect } from 'react';
+import { React, Component, useEffect, useState, useRef } from 'react';
+import { useOnKeyPress } from "./Key.js"
 
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
 let counter = 0
+let GlobalX = 400
+let GlobalY = 400
 //if we want the screen to turn in game then this should be 
 //called in the loop
 // eventType onKeyDown 'w'
@@ -32,10 +35,12 @@ const Counter = () => {
   console.log({counter})
 } 
 
-const Move = (props) => {
+//Do I put the Move function in the gameloop??
+const Move = () => {
   return(
 //how do I check for key input
-props.x += 5,
+
+entities['knight'].x += 5,
 //props.x -= 5,
 //props.y += 5,
 //props.x -=5,
@@ -43,8 +48,71 @@ console.log("Move runs")
     );
 } 
 
+function MoveKnight(){
+  console.log("MoveKnight runs!")
+  console.log(playerY)
+  playerY -= 5
+}
+
+function Knight2 (){
+
+//information to change , function to change = intital state
+  const[playerX, setX] = useState(GlobalX)
+  const[playerY, setY] = useState(GlobalY)
+  
+
+  let X = playerX
+  let Y = playerY
+  
+  //let newX = parseInt(X + 5)
+
+   const HandlerRight = () => {
+    X += 2
+    setX(X)
+    GlobalX += 2
+  }
+  const HandlerLeft = () => {
+    X -= 2
+    setX(X)
+    GlobalX -= 2
+  }
+  const HandlerUp = () => {
+    Y -= 2
+    setY(Y)
+    GlobalY -= 2
+  }
+  const HandlerDown = () => {
+    Y += 2
+    setY(Y)
+    GlobalY += 2
+  }
+  
+
+
+    useOnKeyPress(HandlerRight,'d')
+    useOnKeyPress(HandlerLeft, 'a')
+    useOnKeyPress(HandlerUp, 'w')
+    useOnKeyPress(HandlerDown, 's')
+
+
+
+  return(
+    <View 
+      style={{
+        position: 'absolute',
+        width: 200,
+        height: 200,
+        left: playerX,
+        top: GlobalY,
+        backgroundColor: "blue",
+      }}
+    />
+  )
+}
+
 //main player character
 class Knight{
+
   constructor(){
     this.height = 200;
     this.width = 200;
@@ -78,7 +146,7 @@ class Brick {
     this.velocityY = 3 - randomNum;
   }
 
-  update(playerX, playerY) {
+  update() {
 
     //If the projectiles start at 0 they get stuck
     //Bouncing off walls:
@@ -99,9 +167,9 @@ class Brick {
 //the 200 is the height and width of the player,
 //hardcoded so that we dont need to pass it every time
 //remember to change this if you change player dimensions!
-    if(this.y + this.width < playerY  || this.y > playerY + 200){
+    if(this.y + this.width < GlobalY  || this.y > GlobalY + 200){
     }
-    else if(this.x > playerX +200 || this.x + this.width < playerX ){
+    else if(this.x > GlobalX + 200 || this.x + this.width < GlobalX ){
 
     }
     else{
@@ -152,4 +220,4 @@ class Circle {
   // if that makes it faster or something
 
 
-export {Knight, Circle, Brick, Counter, Move, };
+export {Knight, Circle, Brick, Counter, Move, Knight2, MoveKnight};
