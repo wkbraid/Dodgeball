@@ -9,27 +9,6 @@ const MAXheight = Dimensions.get('window').height;
 let counter = 0
 let GlobalX = 400
 let GlobalY = 400
-//if we want the screen to turn in game then this should be 
-//called in the loop
-// eventType onKeyDown 'w'
-
-
-/*useEffect(() => {
-  document.addEventListener('keydown',detectKeyDown, true)
-  }, [])
-  
-  const detectKeyDown = (e) => {
-  console.log("key pressed: ",)
-  }*/
-
-/*useEffect(() => {
-  document.addEventListener('keydown',detectKeyDown, true)
-  }, [])
-
-  const detectKeyDown = (e) => {
-  console.log("key pressed: ",e.key)
-  }
-*/
 
 const Counter = () => {
   console.log({counter})
