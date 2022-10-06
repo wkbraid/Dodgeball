@@ -156,6 +156,7 @@ class Brick {
       counter += 1
     }
 
+//updating the bricks position
 
     this.x += this.velocityX;
     this.y += this.velocityY;
