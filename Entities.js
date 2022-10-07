@@ -9,61 +9,37 @@ const MAXheight = Dimensions.get('window').height;
 let counter = 0
 let GlobalX = 400
 let GlobalY = 400
+let momentum = [0,0]
 
 const Counter = () => {
   console.log({counter})
 } 
 
-//Do I put the Move function in the gameloop??
-const Move = () => {
-  return(
-//how do I check for key input
-
-entities['knight'].x += 5,
-//props.x -= 5,
-//props.y += 5,
-//props.x -=5,
-console.log("Move runs")
-    );
-} 
-
-function MoveKnight(){
-  console.log("MoveKnight runs!")
-  console.log(playerY)
-  playerY -= 5
-}
-
 function Knight2 (){
 
 //information to change , function to change = intital state
-  const[playerX, setX] = useState(GlobalX)
-  const[playerY, setY] = useState(GlobalY)
-  
-
-  let X = playerX
-  let Y = playerY
-  
-  //let newX = parseInt(X + 5)
+  //const[playerX, setX] = useState(GlobalX)
+  //const[playerY, setY] = useState(GlobalY)
 
    const HandlerRight = () => {
-    X += 2
-    setX(X)
-    GlobalX += 2
+    if(momentum[0] < 2){
+    momentum[0] += .4
+  }
   }
   const HandlerLeft = () => {
-    X -= 2
-    setX(X)
-    GlobalX -= 2
+    if(momentum[0] > -2){
+    momentum[0] -= .4
+    }
   }
   const HandlerUp = () => {
-    Y -= 2
-    setY(Y)
-    GlobalY -= 2
+    if(momentum[1] > -2){
+    momentum[1] -= .4
+    }
   }
   const HandlerDown = () => {
-    Y += 2
-    setY(Y)
-    GlobalY += 2
+    if(momentum[1] < 2){
+    momentum[1] += .4
+    }
   }
   
 
@@ -75,18 +51,18 @@ function Knight2 (){
 
 
 
-  return(
+  /*return(
     <View 
       style={{
         position: 'absolute',
         width: 200,
         height: 200,
         left: playerX,
-        top: GlobalY,
-        backgroundColor: "blue",
+        top: playerY,
+        
       }}
     />
-  )
+  )*/
 }
 
 //main player character
@@ -98,12 +74,16 @@ class Knight{
     this.backgroundColor = "blue";
     this.x = 400;
     this.y = 400;
-    this.velocity = [0,0];
+    this.velocityX = 0;
+    this.velocityY = 0;
 
 }
 
-
-update(playerX, playerY){
+update(){
+  this.x += momentum[0]
+  this.y += momentum[1]
+  GlobalX = this.x
+  GlobalY = this.y
   return [this.x, this.y,]
 }
   //we call update on every entity so we something to run for knight
@@ -186,7 +166,6 @@ class Circle {
   update() {
     this.x += this.velocityX;
     this.y += this.velocityY;
-    this.Move()
   } 
 }
   /*let x = entity.velocity[0]
@@ -200,4 +179,4 @@ class Circle {
   // if that makes it faster or something
 
 
-export {Knight, Circle, Brick, Counter, Move, Knight2, MoveKnight};
+export {Knight, Circle, Brick, Counter, Knight2,};
