@@ -35,7 +35,7 @@ function MoveKnight(){
 
 function Knight2 (){
 
-//information to change , function to change = intital state
+  //information to change , function to change = intital state
   const[playerX, setX] = useState(GlobalX)
   const[playerY, setY] = useState(GlobalY)
   
