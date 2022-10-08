@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { Knight, Circle, Brick, Counter, Knight2, } from "./Entities.js";
+import { Knight, Circle, Brick, Triangle, Counter, Knight2, } from "./Entities.js";
 import { GameEngine } from "react-native-game-engine";
 import AxisPad from 'react-native-axis-pad';
-import { getLocaleDirection } from 'react-native-web/dist/cjs/modules/useLocale/index.js';
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
@@ -11,46 +10,11 @@ const MAXheight = Dimensions.get('window').height;
 
 function Gameloop(entities, { touches }, )  {
 
-  if(entities['knight'].core.velocityX > 0){
-    entities['knight'].core.velocityX -= .35
-  }
-  if(entities['knight'].core.velocityX < 0){
-    entities['knight'].core.velocityX += .35
-  }
-  if(entities['knight'].core.velocityY > 0){
-    entities['knight'].core.velocityY -= .35
-  }
-  if(entities['knight'].core.velocityY < 0){
-    entities['knight'].core.velocityY += .35
-  }
-
   for (let id in entities) {
     entities[id].core.update()
   }
 return entities
 }
-
-/*function moveKnight(entities, {touches}){
-
-  
-  useOnKeyPress(handleUp,'w')
-  useOnKeyPress(handleDown,'s')
-  useOnKeyPress(handleLeft,'a')
-  useOnKeyPress(handleRight,'d')
-
-  const handleUp = () => {
-    entities['knight'].core.velocity[0] += 1
-  }
-  const handleDown = () => {
-    entities['knight'].core.velocity[0] += 1
-  }
-  const handleLeft = () => {
-    entities['knight'].core.velocity[0] += 1
-  }
-  const handleRight = () => {
-    entities['knight'].core.velocity[0] += 1
-  }
-}*/
 
 function Create(props){
   return (
@@ -67,14 +31,38 @@ function Create(props){
     />
   );
 }
+
+function CreateCircle(props){
+  return (
+
+    <View
+      style={{
+        position: 'absolute',
+        borderRadius: props.core.borderRadius,
+        width: props.core.width,
+        height: props.core.height,
+        left: props.core.x,
+        top: props.core.y,
+        backgroundColor: props.core.backgroundColor,
+      }}
+    />
+  );
+}
   
 
-var ents = {knight: { core: new Knight(), renderer: <Create />},};
+var ents = {knight: { core: new Knight(), renderer: <Create />},
+            testcircler: {core: new Circle(100,100), renderer: <CreateCircle/>}};
   //Knight and Brick run every time the game updates that is not good
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     let random = Math.floor(Math.random()*500) + 75
-    ents[i] = { core: new Brick(random, 15), renderer: <Create /> };
+    
+    ents[i] = { core: new Circle(random, 15), renderer: <CreateCircle /> };
+  }
+
+  for(let i = 5; i < 10; i++){
+    let random = Math.floor(Math.random()*500) + 75
+    ents[i] = { core: new Brick(random, 15), renderer: <Create />  };
   }
 
 
