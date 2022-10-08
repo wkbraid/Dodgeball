@@ -9,6 +9,8 @@ const MAXheight = Dimensions.get('window').height;
 let counter = 0
 let GlobalX = 400
 let GlobalY = 400
+let playerHeight = 200
+let playerWidth = 200
 let momentum = [0,0]
 
 const Counter = () => {
@@ -22,23 +24,35 @@ function Knight2 (){
   //const[playerY, setY] = useState(GlobalY)
 
    const HandlerRight = () => {
-    if(momentum[0] < 2){
-    momentum[0] += .4
+    if(momentum[0] < 4){
+    momentum[0] += 1.5
+  }
+  else{
+    momentum[0] = 4
   }
   }
   const HandlerLeft = () => {
-    if(momentum[0] > -2){
-    momentum[0] -= .4
+    if(momentum[0] > -4){
+    momentum[0] -= 1.5
+    }
+    else{
+      momentum[0] = -4
     }
   }
   const HandlerUp = () => {
-    if(momentum[1] > -2){
-    momentum[1] -= .4
+    if(momentum[1] > -4){
+    momentum[1] -= 1.5
+    }
+    else{
+      momentum[1] = -4
     }
   }
   const HandlerDown = () => {
-    if(momentum[1] < 2){
-    momentum[1] += .4
+    if(momentum[1] < 4){
+    momentum[1] += 1.5
+    }
+    else{
+      momentum[1] = 4
     }
   }
   
@@ -69,8 +83,8 @@ function Knight2 (){
 class Knight{
 
   constructor(){
-    this.height = 200;
-    this.width = 200;
+    this.height = playerHeight;
+    this.width = playerWidth;
     this.backgroundColor = "blue";
     this.x = 400;
     this.y = 400;
@@ -82,6 +96,18 @@ class Knight{
 update(){
   this.x += momentum[0]
   this.y += momentum[1]
+  if(momentum[0] > 0){
+    momentum[0] -= .01
+  }
+  if(momentum[0] < 0){
+    momentum[0] += .01
+  }
+  if(momentum[1] > 0){
+    momentum[1] -= .01
+  }
+  if(momentum[1] < 0){
+    momentum[1] += .01
+  }
   GlobalX = this.x
   GlobalY = this.y
   return [this.x, this.y,]
@@ -98,7 +124,6 @@ class Brick {
     this.backgroundColor = 'red';
     this.height = 75;
     this.width = 75;
-
     let randomNum = Math.random()*3
 
     this.velocityX = randomNum;
@@ -126,9 +151,9 @@ class Brick {
 //the 200 is the height and width of the player,
 //hardcoded so that we dont need to pass it every time
 //remember to change this if you change player dimensions!
-    if(this.y + this.width < GlobalY  || this.y > GlobalY + 200){
+    if(this.y + this.width < GlobalY  || this.y > GlobalY + playerHeight){
     }
-    else if(this.x > GlobalX + 200 || this.x + this.width < GlobalX ){
+    else if(this.x > GlobalX + playerWidth || this.x + this.width < GlobalX ){
 
     }
     else{
@@ -140,9 +165,6 @@ class Brick {
 
     this.x += this.velocityX;
     this.y += this.velocityY;
-
-    
-
   }
 
   reverse() {
@@ -152,21 +174,80 @@ class Brick {
 }
 
 class Circle {
-  constructor(){
-    this.backgroundColor = "red";
-    this.radius = 100/2;
-    //borderRadius is the thing to change
-    //how to make Create accept radius, if statement could suffice, slow?
-    this.x = Math.floor(Math.random()*500);
-    this.y = 0;
-    this.velocityX = 1;
-    this.velocityY = 1;
+
+  //for some reason the circle constructor is running every time
+  constructor(x, y){
+    this.borderRadius = 100/2;
+    this.x = x;
+    this.y = y;
+    this.height = 75;
+    this.width = 75;
+
+    let randomNum = Math.random()*3
+
+    this.velocityX = randomNum;
+    this.velocityY = 3 - randomNum;
+    this.backgroundColor = 'red';
     }
   
   update() {
-    this.x += this.velocityX;
-    this.y += this.velocityY;
-  } 
+    //I could also change the momentum but that might be a bit sketchy?
+                          // move towards knight
+    this.velocityX += (GlobalX - this.x)/5000
+    this.velocityY += (GlobalY - this.y)/5000
+    //this.x += this.velocityX + (GlobalX - this.x)/1000;
+    //this.y += this.velocityY + (GlobalY - this.y)/1000;
+    this.x += this.velocityX
+    this.y += this.velocityY
+
+    if(this.x >= (MAXwidth - this.width)){
+      this.reverse()
+    }
+    if(this.x <= 0){
+      this.reverse()
+    }
+    if(this.y >= (MAXheight - this.height)){
+      this.reverse()
+    }
+    if(this.y <= 0){
+      this.reverse()
+    }
+    
+    //check for intersections with the player
+//the 200 is the height and width of the player,
+//hardcoded so that we dont need to pass it every time
+//remember to change this if you change player dimensions!
+    if(this.y + this.width < GlobalY  || this.y > GlobalY + playerHeight){
+    }
+    else if(this.x > GlobalX + playerWidth || this.x + this.width < GlobalX ){
+
+    }
+    else{
+      this.reverse()
+      counter += 1
+    }
+
+}
+reverse() {
+  this.velocityX = (this.velocityX * -1)
+  this.velocityY = (this.velocityY * -1)
+}
+}
+  
+
+class Triangle {
+  constructor(x, y){
+    this.x = x;
+    this.y = y;
+    this.backgroundColor = 'red';
+    this.height = 75;
+    this.width = 75;
+
+    let randomNum = Math.random()*3
+
+    this.velocityX = randomNum;
+    this.velocityY = 3 - randomNum;
+  }
 }
   /*let x = entity.velocity[0]
   let y = entity.velocity[1]
@@ -179,4 +260,4 @@ class Circle {
   // if that makes it faster or something
 
 
-export {Knight, Circle, Brick, Counter, Knight2,};
+export {Knight, Circle, Brick, Counter, Knight2, Triangle};
