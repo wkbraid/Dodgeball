@@ -18,7 +18,7 @@ const Counter = () => {
   console.log({counter})
 } 
 
-function Knight2 (){
+function MoveKnight (){
 
 //function to detect wasd input for computer
    const HandlerRight = () => {
@@ -94,7 +94,7 @@ update(){
   //update the knights position and record the change
   GlobalX = this.x
   GlobalY = this.y
-  return [this.x, this.y,]
+  //return [this.x, this.y,]
 }
 }
 
@@ -165,7 +165,6 @@ class Circle {
     }
   
   update() {
- 
     // move towards knight
     this.velocityX += (GlobalX - this.x)/5000
     this.velocityY += (GlobalY - this.y)/5000
@@ -211,7 +210,6 @@ class Grenade {
   constructor(x, y) {
     //figure out how to set a timer when it is created and then run
     //a method when the timer is up
-    //setTimeout(this.explode(),5000)
     this.borderRadius = 100/2;
     this.x = x;
     this.y = y;
@@ -258,10 +256,34 @@ class Grenade {
     this.y += this.velocityY;
   }
 
+  stop(){
+    this.velocityX = 0
+    this.velocityY = 0
+  }
+
   reverse() {
     this.velocityX = (this.velocityX * -1)
     this.velocityY = (this.velocityY * -1)
   }
 }
 
-export {Knight, Circle, Brick, Counter, Knight2, Grenade};
+class Shrapnel{
+  constructor(x,y,dX,dY){
+    this.borderRadius = 50/2;
+    this.x = x;
+    this.y = y;
+    this.height = 25;
+    this.width = 25;
+    this.velocityX = dX;
+    this.velocityY = dY;
+    this.backgroundColor = 'red';
+  }
+
+  update(){
+    this.x += this.velocityX
+    this.y += this.velocityY
+  }
+}
+
+
+export {Knight, Circle, Brick, counter, MoveKnight, Grenade, Shrapnel};
