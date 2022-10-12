@@ -9,31 +9,30 @@ import AxisPad from 'react-native-axis-pad';
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
 let index = 0
-var GrenadeIndices = new Map()
 
-function Timer(i) {
+function Timer(cb, i, seconds) {
   setTimeout(() => {
       console.log("Timer is called!")
       console.log(i)
-      Explode(i)
-  }, 4000);
+      cb(i)
+  }, seconds * 1000);
+}
+
+function DeleteEntity(i){
+delete(ents[i])
 }
 
 function Explode(i){
   //spawns shrapnel coming from location
   InitialShrapnel(ents[i].core.x,ents[i].core.y)
   //delete the original projectile
-  delete(ents[i])
+  DeleteEntity(i)
 }
 
 function Gameloop(entities, { touches }, )  {
   //setTimeout is NOT what I want?
   for (let id in entities) {
     entities[id].core.update()
-    
-    //console.log(id)
-    //console.log(GrenadeIndices.get(parseInt(id)))
-    //delete(entities[id])
   }
   
 return entities
@@ -108,7 +107,7 @@ var ents = {knight: { core: new Knight(), renderer: <CreateBrick />},};
     let random = Math.floor(Math.random()*500) + 75
     ents[index] = { core: new Grenade(random, 15), renderer: <CreateCircle />,}
     //console.log(index)
-    Timer(index)
+    Timer(Explode,index, 4)
     index++
   }
 
@@ -118,23 +117,38 @@ var ents = {knight: { core: new Knight(), renderer: <CreateBrick />},};
 //dX and dY are the direction the shrapnel will head in
         if(dX == 0 ){
           ents[index] = { core: new Shrapnel(x,y,dX,-1), renderer: <CreateCircle/> }
-  index++
-  ents[index] = { core: new Shrapnel(x,y,dX,1), renderer: <CreateCircle/> }
-  index++
+          Timer(DeleteEntity, index, 2)
+          index++
+          ents[index] = { core: new Shrapnel(x,y,dX,1), renderer: <CreateCircle/> }
+          Timer(DeleteEntity, index, 2)
+          index++
         }
  else {
   ents[index] = { core: new Shrapnel(x,y,dX,0), renderer: <CreateCircle/> }
+  Timer(DeleteEntity, index, 3)
   index++
  }
 }
 }
 
-function TimeUp(){
-navigation.navigate("Results", {counter: counter})
+function TimeUp(navigation){
+  {navigation.navigate("Results", {counter: counter})}
+
+}
+
+function reset(){
+  for(let j = 0; j < index; j++){
+    delete(ents[j])
+  }
+  index = 0
 }
 
 export default function Dodge({ navigation }) {
-setTimeout(TimeUp, 20000)
+reset()
+setTimeout(TimeUp, 5000, navigation)
+InitialBrick()
+InitialCircle()
+InitialGrenade()
 InitialBrick()
 InitialCircle()
 InitialGrenade()

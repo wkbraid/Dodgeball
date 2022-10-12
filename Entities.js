@@ -151,7 +151,7 @@ class Brick {
 
 class Circle {
   constructor(x, y){
-    this.borderRadius = 100/2;
+    this.borderRadius = 75;
     this.x = x;
     this.y = y;
     this.height = 75;
@@ -188,6 +188,9 @@ class Circle {
     }
     
 //check for intersection with knight
+//check if there is a possible for up down
+//check if there is a possible for right left
+//check if those two things overlap
     if(this.y + this.width < GlobalY  || this.y > GlobalY + playerHeight){
     }
     else if(this.x > GlobalX + playerWidth || this.x + this.width < GlobalX ){
@@ -210,7 +213,7 @@ class Grenade {
   constructor(x, y) {
     //figure out how to set a timer when it is created and then run
     //a method when the timer is up
-    this.borderRadius = 100/2;
+    this.borderRadius = 75;
     this.x = x;
     this.y = y;
     this.height = 75;
@@ -269,7 +272,7 @@ class Grenade {
 
 class Shrapnel{
   constructor(x,y,dX,dY){
-    this.borderRadius = 50/2;
+    this.borderRadius = 25;
     this.x = x;
     this.y = y;
     this.height = 25;
@@ -282,6 +285,41 @@ class Shrapnel{
   update(){
     this.x += this.velocityX
     this.y += this.velocityY
+    this.velocityX += this.velocityX/75
+    this.velocityY += this.velocityY/75
+
+    //preliminary checks to see if the x or y by itself rules out the
+    //possibility of a collision, although is this really better?
+    //perhaps the times when performance is the most important
+    //IS when a collision occures
+    if(this.x + this.width/2 < GlobalX || this.x - this.height/2 > GlobalX){
+      return
+    }
+    else if(this.y + this.height/2 < GlobalY || this.y - this.height/2 > GlobalX){
+      return
+    }
+
+    let x1 = GlobalX
+    let y1 = GlobalY
+
+    //check if its above or below
+    if(this.y > GlobalY){
+      //then it's below
+      y1 = GlobalY + playerHeight
+    }
+
+    if(this.x > GlobalY){
+      //then its above
+      x1 = GlobalX + playerWidth
+    }
+
+    if(Math.sqrt((x1 - this.x ,2) + Math.pow( y1 - this.y ,2))){
+      counter++
+    }
+
+
+    //check if its to the right or the left
+
   }
 }
 

@@ -1,5 +1,6 @@
 import Dodge from "./Dodge.js";
 import Home from "./Home.js";
+import Results from "./Results"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -8,7 +9,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen 
           name="Home"
           component={Home}
@@ -16,6 +17,10 @@ export default function App() {
         <Stack.Screen 
           name="Dodge"
           component={Dodge}
+        />
+         <Stack.Screen 
+          name="Results"
+          component={Results}
         />
       </Stack.Navigator>
     </NavigationContainer>
