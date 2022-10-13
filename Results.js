@@ -3,6 +3,7 @@ animation (like a bar filling up or something) which changes
 based on how many times the knight was hit */
 import { StyleSheet, Text, View, Button } from 'react-native';
 
+//navigating to a route doesnt
 export default function Results({ navigation, route }) {
     return (
         <View>

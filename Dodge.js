@@ -139,6 +139,7 @@ function TimeUp(navigation){
 function reset(){
   for(let j = 0; j < index; j++){
     delete(ents[j])
+    console.log("reset deleted an entity")
   }
   index = 0
 }
