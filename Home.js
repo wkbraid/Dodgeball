@@ -1,4 +1,4 @@
-
+//Displays Home Screen
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 

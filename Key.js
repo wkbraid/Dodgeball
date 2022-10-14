@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+//handles key input
 
+import { useEffect } from 'react'
 
 export const useOnKeyPress = (callback, targetKey) => {
 useEffect(() => {
