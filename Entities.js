@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef } from 'react';
-import { useOnKeyPress } from "./Key.js"
+import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
+import { CreateCircle, CreateBrick } from "./Dodge.js"
 
 
 const MAXwidth = Dimensions.get('window').width;
@@ -11,52 +12,48 @@ let GlobalX = 400
 let GlobalY = 400
 let playerHeight = 150
 let playerWidth = 150
-let momentum = [0,0]
+let input = [0,0,0,0]
+//      left,right,up,down (w,a,s,d) each stores a value, 0 = not pressed
 
 //count intersections with players
 const Counter = () => {
   console.log({counter})
 } 
 
+//function to detect wasd input on computer
 function MoveKnight (){
-
-//function to detect wasd input for computer
-   const HandlerRight = () => {
-    if(momentum[0] < 4){
-    momentum[0] += 1.5
+  const Left = () => {
+    input[0] = 1.5
   }
-  else{
-    momentum[0] = 4
+  const Right = () => {
+    input[1] = 1.5  
   }
+  const Up = () => {
+    input[2] = 1.5
   }
-  const HandlerLeft = () => {
-    if(momentum[0] > -4){
-    momentum[0] -= 1.5
-    }
-    else{
-      momentum[0] = -4
-    }
+  const Down = () => {
+    input[3] = 1.5
   }
-  const HandlerUp = () => {
-    if(momentum[1] > -4){
-    momentum[1] -= 1.5
-    }
-    else{
-      momentum[1] = -4
-    }
+  const UndoLeft = () => {
+    input[0] = 0
   }
-  const HandlerDown = () => {
-    if(momentum[1] < 4){
-    momentum[1] += 1.5
-    }
-    else{
-      momentum[1] = 4
-    }
+  const UndoRight = () => {
+    input[1] = 0  
   }
-    useOnKeyPress(HandlerRight,'d')
-    useOnKeyPress(HandlerLeft, 'a')
-    useOnKeyPress(HandlerUp, 'w')
-    useOnKeyPress(HandlerDown, 's')
+  const UndoUp = () => {
+    input[2] = 0
+  }
+  const UndoDown = () => {
+    input[3] = 0
+  }
+  UseOnKeyPress(Left, 'a')
+  UseOnKeyPress(Right,'d')
+  UseOnKeyPress(Up, 'w')
+  UseOnKeyPress(Down, 's')
+  UseOnKeyRelease(UndoLeft,'a')
+  UseOnKeyRelease(UndoRight,'d')
+  UseOnKeyRelease(UndoUp, 'w')
+  UseOnKeyRelease(UndoDown, 's')
 }
 
 //main player character
@@ -70,44 +67,50 @@ class Knight{
     this.y = 400;
     this.velocityX = 0;
     this.velocityY = 0;
-
+    this.renderer = <CreateBrick/>
+    this.momentum = [0,0]
 }
 
+//update knights position
 update(){
-  //update knights position
-  this.x += momentum[0]
-  this.y += momentum[1]
-
+  let horizontal = input[1] - input[0]
+  let vertical = input[3] - input[2]
+  if(Math.abs(this.momentum[0] + horizontal) > 4){
+    this.momentum[0] = Math.sign(this.momentum[0]) * 4
+  }
+  else{
+    this.momentum[0] += horizontal
+  }
+  if(Math.abs(this.momentum[1] + vertical) > 4){
+    this.momentum[1] = Math.sign(this.momentum[1]) * 4
+  }
+  else{
+    this.momentum[1] += vertical
+  }
   //slow the knights velocity by a small amount (to lessen drifting)
-  if(momentum[0] > 0){
-    momentum[0] -= .01
-  }
-  if(momentum[0] < 0){
-    momentum[0] += .01
-  }
-  if(momentum[1] > 0){
-    momentum[1] -= .01
-  }
-  if(momentum[1] < 0){
-    momentum[1] += .01
-  }
+  this.momentum[0] -= .01 * Math.sign(this.momentum[0])
+  this.momentum[1] -= .01 * Math.sign(this.momentum[1])
+
+  this.x += this.momentum[0]
+  this.y += this.momentum[1]
   //update the knights position and record the change
   GlobalX = this.x
   GlobalY = this.y
-  //return [this.x, this.y,]
 }
 }
 
 
 class Brick {
-  constructor(x, y) {
+  constructor() {
+    let x = Math.random()*500
+    let y = 5
     this.x = x;
     this.y = y;
     this.backgroundColor = 'red';
     this.height = 75;
     this.width = 75;
+    this.renderer = <CreateBrick/>
     let randomNum = Math.random()*3
-
     this.velocityX = randomNum;
     this.velocityY = 3 - randomNum;
   }
@@ -142,7 +145,7 @@ class Brick {
     this.x += this.velocityX;
     this.y += this.velocityY;
   }
-
+// TODO learn to use matterjs to handle collisions and possibly movement
   reverse() {
     this.velocityX = (this.velocityX * -1)
     this.velocityY = (this.velocityY * -1)
@@ -150,13 +153,15 @@ class Brick {
 }
 
 class Circle {
-  constructor(x, y){
+  constructor(){
+    let x = 5
+    let y = Math.random()*500
     this.borderRadius = 75;
     this.x = x;
     this.y = y;
     this.height = 75;
     this.width = 75;
-
+    this.renderer = <CreateCircle/>
     let randomNum = Math.random()*3
 
     this.velocityX = randomNum;
@@ -210,14 +215,17 @@ reverse() {
   
 
 class Grenade {
-  constructor(x, y) {
+  constructor() {
     //figure out how to set a timer when it is created and then run
     //a method when the timer is up
     this.borderRadius = 75;
+    let x = 5
+    let y = Math.random()*500
     this.x = x;
     this.y = y;
     this.height = 75;
     this.width = 75;
+    this.renderer = <CreateCircle/>
 
     let randomNum = Math.random()*3
 
@@ -279,6 +287,7 @@ class Shrapnel{
     this.width = 25;
     this.velocityX = dX;
     this.velocityY = dY;
+    this.renderer = <CreateCircle/>
     this.backgroundColor = 'red';
   }
 

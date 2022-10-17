@@ -13,6 +13,17 @@ const generateUniqueId = require('generate-unique-id');
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
 
+
+//adds an entity given its type, if it's a Grenade set a timer for explosion
+function AddEntity(entity){
+let id = generateUniqueId()
+ents[id] = new entity()
+
+if(entity == Grenade){
+  setTimeout(() => { Explode(id) }, 2000)
+}
+}
+
 //deletes a single entity given that entities unique id
 function DeleteEntity(id){
 delete(ents[id])
@@ -21,20 +32,22 @@ delete(ents[id])
 //blows up the grenade
 function Explode(id){
   //spawns shrapnel traveling from where the grenade blew up
-  InitialShrapnel(ents[id].core.x,ents[id].core.y)
+  InitialShrapnel(ents[id].x,ents[id].y)
   //delete the original projectile
   DeleteEntity(id)
 }
 
+//runs 60 times a second updating each entitiy
 function Gameloop(entities, { touches }, )  {
   //setTimeout is NOT what I want?
   for (let id in entities) {
-    entities[id].core.update()
+    entities[id].update()
   }
   
 return entities
 }
 
+//creates a square component
 function CreateBrick(props){
   return (
     /* <View style={styles.container}>
@@ -46,92 +59,49 @@ function CreateBrick(props){
     <View
       style={{
         position: 'absolute',
-        width: props.core.width,
-        height: props.core.height,
-        left: props.core.x,
-        top: props.core.y,
-        backgroundColor: props.core.backgroundColor,
+        width: props.width,
+        height: props.height,
+        left: props.x,
+        top: props.y,
+        backgroundColor: props.backgroundColor,
       }}
     />
   );
 }
 
+//creates a circle component
 function CreateCircle(props){
   return (
 
     <View
       style={{
         position: 'absolute',
-        borderRadius: props.core.borderRadius,
-        width: props.core.width,
-        height: props.core.height,
-        left: props.core.x,
-        top: props.core.y,
-        backgroundColor: props.core.backgroundColor,
+        borderRadius: props.borderRadius,
+        width: props.width,
+        height: props.height,
+        left: props.x,
+        top: props.y,
+        backgroundColor: props.backgroundColor,
       }}
     />
   );
 }
-
-function CreateGrenade(props){
-  return (
-    <View
-      style={{
-        position: 'absolute',
-        borderRadius: props.core.borderRadius,
-        width: props.core.width,
-        height: props.core.height,
-        left: props.core.x,
-        top: props.core.y,
-        backgroundColor: props.core.backgroundColor,
-      }}
-    />
-  );
-}
-
-  
-
-ents = {knight: { core: new Knight(), renderer: <CreateBrick />},};
-
-  function InitialCircle() {
-    let random = Math.floor(Math.random()*500) + 75
-    let id = generateUniqueId()
-    ents[id] = { core: new Circle(random, 15), renderer: <CreateCircle /> };
-  }
-
-  function InitialBrick(){
-    let random = Math.floor(Math.random()*500) + 75
-    let id = generateUniqueId()
-    ents[id] = { core: new Brick(random, 15), renderer: <CreateBrick />  };
-  }
-
-  function InitialGrenade(){
-    let random = Math.floor(Math.random()*500) + 75
-    let id = generateUniqueId()
-    ents[id] = { core: new Grenade(random, 15), renderer: <CreateCircle />,}
-    setTimeout(() => { Explode(id) }, 3000)
-  }
 
   //creates one shrapnel in each of the cardinal directions
-  function InitialShrapnel(x , y){
-    let dY = 0
-    for(let dX= -1; dX < 2; dX++){
-//dX and dY are the direction the shrapnel will head in
-        if(dX == 0 ){
+  function InitialShrapnel(x, y){
           let id = generateUniqueId()
-          ents[id] = { core: new Shrapnel(x,y,dX,-1), renderer: <CreateCircle/> }
+          ents[id] =  new Shrapnel(x,y,1,0) 
           setTimeout(() => { DeleteEntity(id) }, 2000)
           id = generateUniqueId()
-          ents[id] = { core: new Shrapnel(x,y,dX,1), renderer: <CreateCircle/> }
-          setTimeout(() => { DeleteEntity(id) }, 3000)
+          ents[id] = new Shrapnel(x,y,0,1)
+          setTimeout(() => { DeleteEntity(id) }, 2000)
+          id = generateUniqueId()
+          ents[id] = new Shrapnel(x,y,0,-1)
+          setTimeout(() => { DeleteEntity(id) }, 2000)
+          id = generateUniqueId()
+          ents[id] = new Shrapnel(x,y,-1,0)
+          setTimeout(() => { DeleteEntity(id) }, 2000)
         }
- else {
-  let id = generateUniqueId()
-  ents[id] = { core: new Shrapnel(x,y,dX,0), renderer: <CreateCircle/> }
-  setTimeout(() => { DeleteEntity(id) }, 3000)
- }
-}
-}
 
 // Navigates to the Results screen after an amount of time
 // Specified by a call in the main function
@@ -148,17 +118,16 @@ function DeleteEntities(){
 }
 
 export default function Dodge({ navigation }) {
-  //this code only runs once in the overall app
-  //Does it run when navigated to or does it prerun?
+  //this code only runs when navigated to from the home page, why?
 DeleteEntities()
-ents = {knight: { core: new Knight(), renderer: <CreateBrick />},};
+ents = {knight: new Knight() };
 setTimeout(TimeUp, 5000, navigation)
-InitialBrick()
-InitialCircle()
-InitialGrenade()
-InitialBrick()
-InitialCircle()
-InitialGrenade()
+AddEntity(Circle)
+AddEntity(Circle)
+AddEntity(Brick)
+AddEntity(Brick)
+AddEntity(Grenade)
+AddEntity(Grenade)
   return (
 <View>
     <GameEngine
@@ -188,3 +157,5 @@ InitialGrenade()
     </View>
   );
 }
+
+export { CreateCircle, CreateBrick }

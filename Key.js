@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export const useOnKeyPress = (callback, targetKey) => {
+const UseOnKeyPress = (callback, targetKey) => {
 useEffect(() => {
 
     const keyPressHandler = (event) => {
@@ -16,5 +16,22 @@ useEffect(() => {
     }
 
 },[callback, targetKey])
-
 }
+
+const UseOnKeyRelease = (callback, targetKey) => {
+    useEffect(() => {
+    
+        const keyPressHandler = (event) => {
+            if(event.key == targetKey){
+                callback();
+            }
+        }
+        document.addEventListener('keyup', keyPressHandler);
+        return () => {
+            document.removeEventListener('keyup', keyPressHandler);
+        }
+    
+    },[callback, targetKey])
+}
+
+export {UseOnKeyPress, UseOnKeyRelease};
