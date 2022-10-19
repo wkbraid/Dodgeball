@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
-import { CreateCircle, CreateBrick } from "./Dodge.js"
+import { CreateCircle, CreateBrick, DeleteEntity } from "./Dodge.js"
 
 
 const MAXwidth = Dimensions.get('window').width;
@@ -67,8 +67,9 @@ class Knight{
     this.y = 400;
     this.velocityX = 0;
     this.velocityY = 0;
-    this.renderer = <CreateBrick/>
-    this.momentum = [0,0]
+    this.Image = "./assets/Background.jpeg";
+    this.renderer = <CreateBrick/>;
+    this.momentum = [0,0];
 }
 
 //update knights position
@@ -101,16 +102,18 @@ update(){
 
 
 class Brick {
-  constructor() {
-    let x = Math.random()*500
-    let y = 5
+  constructor(id) {
+    this.id = id;
+    let x = Math.random()*500;
+    let y = 5;
     this.x = x;
     this.y = y;
     this.backgroundColor = 'red';
     this.height = 75;
     this.width = 75;
-    this.renderer = <CreateBrick/>
-    let randomNum = Math.random()*3
+    this.Image = "./assets/Brick.jpeg";
+    this.renderer = <CreateBrick/>;
+    let randomNum = Math.random()*3;
     this.velocityX = randomNum;
     this.velocityY = 3 - randomNum;
   }
@@ -137,7 +140,7 @@ class Brick {
 
     }
     else{
-      this.reverse()
+      DeleteEntity(this.id)
       counter += 1
     }
 
@@ -153,7 +156,8 @@ class Brick {
 }
 
 class Circle {
-  constructor(){
+  constructor(id){
+    this.id = id;
     let x = 5
     let y = Math.random()*500
     this.borderRadius = 75;
@@ -170,11 +174,10 @@ class Circle {
     }
   
   update() {
-    // move towards knight
+    // change velocity to move towards knight
     this.velocityX += (GlobalX - this.x)/5000
     this.velocityY += (GlobalY - this.y)/5000
-    //this.x += this.velocityX + (GlobalX - this.x)/1000;
-    //this.y += this.velocityY + (GlobalY - this.y)/1000;
+    //move
     this.x += this.velocityX
     this.y += this.velocityY
 
@@ -202,7 +205,7 @@ class Circle {
 
     }
     else{
-      this.reverse()
+      DeleteEntity(this.id)
       counter += 1
     }
 
@@ -215,9 +218,8 @@ reverse() {
   
 
 class Grenade {
-  constructor() {
-    //figure out how to set a timer when it is created and then run
-    //a method when the timer is up
+  constructor(id) {
+    this.id = id
     this.borderRadius = 75;
     let x = 5
     let y = Math.random()*500
@@ -258,7 +260,7 @@ class Grenade {
 
     }
     else{
-      this.reverse()
+      DeleteEntity(this.id)
       counter += 1
     }
 
@@ -279,7 +281,8 @@ class Grenade {
 }
 
 class Shrapnel{
-  constructor(x,y,dX,dY){
+  constructor(x,y,dX,dY,id){
+    this.id = id
     this.borderRadius = 25;
     this.x = x;
     this.y = y;

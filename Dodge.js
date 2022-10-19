@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native';
 import { Knight, Circle, Brick, Grenade, MoveKnight, Shrapnel, counter} from "./Entities.js";
 import { GameEngine } from "react-native-game-engine";
 import AxisPad from 'react-native-axis-pad';
@@ -17,7 +17,7 @@ const MAXheight = Dimensions.get('window').height;
 //adds an entity given its type, if it's a Grenade set a timer for explosion
 function AddEntity(entity){
 let id = generateUniqueId()
-ents[id] = new entity()
+ents[id] = new entity(id)
 
 if(entity == Grenade){
   setTimeout(() => { Explode(id) }, 2000)
@@ -39,23 +39,40 @@ function Explode(id){
 
 //runs 60 times a second updating each entitiy
 function Gameloop(entities, { touches }, )  {
-  //setTimeout is NOT what I want?
+  let toDelete = []
   for (let id in entities) {
-    entities[id].update()
+      entities[id].update()
   }
   
 return entities
 }
 
 //creates a square component
+function CreateBrick(props) {
+return(
+  //Having a dynamic call as in props.Image produces the error
+  //Cannot find module './assets/Brick.jpeg'; which doesn't seem right
+    <Image source = {require("./assets/Brick.jpeg")}
+      style = {{        
+      position: 'absolute',
+      width: props.width,
+      height: props.height,
+      left: props.x,
+      top: props.y,
+      backgroundColor: props.backgroundColor,}}/>
+
+);
+}
+/*
+//creates a square component
 function CreateBrick(props){
   return (
-    /* <View style={styles.container}>
+     <View style={styles.container}>
       <Image
         style={ INSERT STYLE HERE }
         source={require('@expo/snack-static/react-native-logo.png')}
       />
-    */
+    
     <View
       style={{
         position: 'absolute',
@@ -68,7 +85,7 @@ function CreateBrick(props){
     />
   );
 }
-
+*/
 //creates a circle component
 function CreateCircle(props){
   return (
@@ -90,16 +107,16 @@ function CreateCircle(props){
   //creates one shrapnel in each of the cardinal directions
   function InitialShrapnel(x, y){
           let id = generateUniqueId()
-          ents[id] =  new Shrapnel(x,y,1,0) 
+          ents[id] =  new Shrapnel(x,y,1,0,id) 
           setTimeout(() => { DeleteEntity(id) }, 2000)
           id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,0,1)
+          ents[id] = new Shrapnel(x,y,0,1,id)
           setTimeout(() => { DeleteEntity(id) }, 2000)
           id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,0,-1)
+          ents[id] = new Shrapnel(x,y,0,-1,id)
           setTimeout(() => { DeleteEntity(id) }, 2000)
           id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,-1,0)
+          ents[id] = new Shrapnel(x,y,-1,0,id)
           setTimeout(() => { DeleteEntity(id) }, 2000)
         }
 
@@ -135,11 +152,16 @@ AddEntity(Grenade)
     var entities = {ents}>
     <MoveKnight/>
 
-  <View style={{left: MAXwidth/100, top: 3*MAXheight/4.2, backgroundcolor: "blue"}}>  
-
+    
+    </GameEngine>
+    </View>
+  );
+}
+/* Code for Joystick, should in the GameEngine tag
+<View style={{left: MAXwidth/100, top: 3*MAXheight/4.2, backgroundcolor: "blue"}}>  
 
 <AxisPad
-    resetOnRelease={true}
+  //  resetOnRelease={true}
     autoCenter={true}
     size = {200}           
     handlerSize= {100}
@@ -151,11 +173,5 @@ AddEntity(Grenade)
     }}>
     <Text>!</Text>
 </AxisPad>
-</View>
-    
-    </GameEngine>
-    </View>
-  );
-}
-
-export { CreateCircle, CreateBrick }
+</View> */
+export { CreateCircle, CreateBrick, DeleteEntity }
