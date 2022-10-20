@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native';
 import { Knight, Circle, Brick, Grenade, MoveKnight, Shrapnel, counter} from "./Entities.js";
 import { GameEngine } from "react-native-game-engine";
+import Matter from "matter-js";
 import AxisPad from 'react-native-axis-pad';
 ////this looks interesting for the attacker placing/throwing projectiles:
 //https://reactnative.dev/docs/panresponder 

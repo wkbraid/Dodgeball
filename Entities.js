@@ -3,7 +3,7 @@ import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
 import { CreateCircle, CreateBrick, DeleteEntity } from "./Dodge.js"
-
+import Matter from "matter-js"
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
@@ -71,7 +71,7 @@ class Knight{
     this.renderer = <CreateBrick/>;
     this.momentum = [0,0];
 }
-
+// if x and y are presse
 //update knights position
 update(){
   let horizontal = input[1] - input[0]
@@ -121,16 +121,16 @@ class Brick {
   update() {
     //Bouncing off walls:
     if(this.x >= (MAXwidth - this.width)){
-      this.reverse()
+      this.reverse(-1,1)
     }
     if(this.x <= 0){
-      this.reverse()
+      this.reverse(-1,1)
     }
     if(this.y >= (MAXheight - this.height)){
-      this.reverse()
+      this.reverse(1,-1)
     }
     if(this.y <= 0){
-      this.reverse()
+      this.reverse(1,-1)
     }
 
   //check for player intersections  
@@ -149,9 +149,9 @@ class Brick {
     this.y += this.velocityY;
   }
 // TODO learn to use matterjs to handle collisions and possibly movement
-  reverse() {
-    this.velocityX = (this.velocityX * -1)
-    this.velocityY = (this.velocityY * -1)
+  reverse(xMult, yMult) {
+    this.velocityX = (this.velocityX * xMult)
+    this.velocityY = (this.velocityY * yMult)
   }
 }
 
