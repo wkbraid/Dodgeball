@@ -7,8 +7,7 @@ export default function Home({ navigation }) {
     return (
         <ImageBackground
         style={styles.background}
-        source={require('./assets/Background.jpeg')}>
-        <Button style={styles.button} title="Play" onPress={() => navigation.navigate("Dodge")}/> 
+        source={require('./assets/Background.jpeg')}> 
         <Pressable style={styles.button} onPress={() => navigation.navigate("Dodge")}>
       <Text style={styles.text}>Play</Text>
             </Pressable>
@@ -24,6 +23,8 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       elevation: 3,
       backgroundColor: 'black',
+      height: '20%',
+      width: '20%',
     },
     text: {
         fontSize: 16,
@@ -35,5 +36,7 @@ const styles = StyleSheet.create({
       },
     background: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     }, })

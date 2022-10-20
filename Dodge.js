@@ -90,7 +90,8 @@ function CreateBrick(props){
 function CreateCircle(props){
   return (
 
-    <View
+    <Image
+      source = {require("./assets/Baseball.png")}
       style={{
         position: 'absolute',
         borderRadius: props.borderRadius,
@@ -138,7 +139,7 @@ export default function Dodge({ navigation }) {
   //this code only runs when navigated to from the home page, why?
 DeleteEntities()
 ents = {knight: new Knight() };
-setTimeout(TimeUp, 5000, navigation)
+setTimeout(TimeUp, 10000, navigation)
 AddEntity(Circle)
 AddEntity(Circle)
 AddEntity(Brick)

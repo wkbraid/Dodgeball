@@ -76,17 +76,17 @@ class Knight{
 update(){
   let horizontal = input[1] - input[0]
   let vertical = input[3] - input[2]
-  if(Math.abs(this.momentum[0] + horizontal) > 4){
+  if(Math.abs(this.momentum[0] + horizontal/4) > 4){
     this.momentum[0] = Math.sign(this.momentum[0]) * 4
   }
   else{
-    this.momentum[0] += horizontal
+    this.momentum[0] += horizontal/4
   }
-  if(Math.abs(this.momentum[1] + vertical) > 4){
+  if(Math.abs(this.momentum[1] + vertical/4) > 4){
     this.momentum[1] = Math.sign(this.momentum[1]) * 4
   }
   else{
-    this.momentum[1] += vertical
+    this.momentum[1] += vertical/4
   }
   //slow the knights velocity by a small amount (to lessen drifting)
   this.momentum[0] -= .01 * Math.sign(this.momentum[0])

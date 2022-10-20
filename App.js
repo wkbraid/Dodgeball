@@ -13,14 +13,17 @@ export default function App() {
         <Stack.Screen 
           name="Home"
           component={Home}
+          options={{headerShown: false}}
         />
         <Stack.Screen 
           name="Dodge"
           component={Dodge}
+          options={{headerShown: false}}
         />
          <Stack.Screen 
           name="Results"
           component={Results}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

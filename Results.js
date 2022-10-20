@@ -10,7 +10,7 @@ export default function Results({ navigation, route }) {
     return (
         <View>
             <Text>You were hit by projectiles {route.params.counter} times!</Text>
-        <Button  title="Play again" onPress={() => navigation.navigate("Dodge")}/> 
+        <Button  title="Play again" onPress={() => navigation.navigate("Home")}/> 
         </View>
     )  
 }
