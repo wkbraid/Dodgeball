@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
-import { CreateCircle, CreateBrick, DeleteEntity } from "./Dodge.js"
+import { CreateCircle, CreateBrick, DeleteEntity, CreateKnight } from "./Dodge.js"
 import Matter from "matter-js"
+import generateUniqueId from 'generate-unique-id';
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
@@ -13,8 +14,11 @@ let GlobalY = 400
 let playerHeight = 150
 let playerWidth = 150
 let input = [0,0,0,0]
+let WaterPosition = [Math.random()*MAXwidth, Math.random()*MAXheight]
+let WaterSize = [100,100]
 //      left,right,up,down (w,a,s,d) each stores a value, 0 = not pressed
 
+// TODO: fix intersections between circle and rectangle
 //count intersections with players
 const Counter = () => {
   console.log({counter})
@@ -63,12 +67,13 @@ class Knight{
     this.height = playerHeight;
     this.width = playerWidth;
     this.backgroundColor = "blue";
+    this.id = 'knight';
     this.x = 400;
     this.y = 400;
     this.velocityX = 0;
     this.velocityY = 0;
-    this.Image = "./assets/Background.jpeg";
-    this.renderer = <CreateBrick/>;
+    this.url = "./assets/Background.jpeg";
+    this.renderer = <CreateKnight/>;
     this.momentum = [0,0];
 }
 // if x and y are presse
@@ -92,6 +97,17 @@ update(){
   this.momentum[0] -= .01 * Math.sign(this.momentum[0])
   this.momentum[1] -= .01 * Math.sign(this.momentum[1])
 
+  //check if the knight is in water, slow the knight if it is
+  if(this.y + this.width < WaterPosition[1]  || this.y > WaterPosition[1] + WaterSize[1]){
+  }
+  else if(this.x > WaterPosition[0] + WaterSize[0] || this.x + this.width < WaterPosition[0] ){
+
+  }
+  else{
+    this.momentum[0] *= .8
+    this.momentum[1] *= .8
+  }
+
   this.x += this.momentum[0]
   this.y += this.momentum[1]
   //update the knights position and record the change
@@ -102,8 +118,8 @@ update(){
 
 
 class Brick {
-  constructor(id) {
-    this.id = id;
+  constructor() {
+    this.id = "Brick_" + generateUniqueId;
     let x = Math.random()*500;
     let y = 5;
     this.x = x;
@@ -111,7 +127,7 @@ class Brick {
     this.backgroundColor = 'red';
     this.height = 75;
     this.width = 75;
-    this.Image = "./assets/Brick.jpeg";
+    this.url = "./assets/Baseball.png";
     this.renderer = <CreateBrick/>;
     let randomNum = Math.random()*3;
     this.velocityX = randomNum;
@@ -148,7 +164,7 @@ class Brick {
     this.x += this.velocityX;
     this.y += this.velocityY;
   }
-// TODO learn to use matterjs to handle collisions and possibly movement
+
   reverse(xMult, yMult) {
     this.velocityX = (this.velocityX * xMult)
     this.velocityY = (this.velocityY * yMult)
@@ -156,15 +172,16 @@ class Brick {
 }
 
 class Circle {
-  constructor(id){
-    this.id = id;
+  constructor(){
+    this.id = "Circle_" + generateUniqueId();
     let x = 5
-    let y = Math.random()*500
+    let y = 5
     this.borderRadius = 75;
-    this.x = x;
-    this.y = y;
+    this.x = 5;
+    this.y = Math.random() * MAXheight;
     this.height = 75;
     this.width = 75;
+    this.url = "./assets/Baseball.png"
     this.renderer = <CreateCircle/>
     let randomNum = Math.random()*3
 
@@ -218,13 +235,14 @@ reverse() {
   
 
 class Grenade {
-  constructor(id) {
-    this.id = id
+  constructor() {
+    this.id = "Grenade_" + generateUniqueId()
     this.borderRadius = 75;
     let x = 5
     let y = Math.random()*500
     this.x = x;
     this.y = y;
+    this.url = "./assets/Baseball.png"
     this.height = 75;
     this.width = 75;
     this.renderer = <CreateCircle/>
@@ -281,8 +299,8 @@ class Grenade {
 }
 
 class Shrapnel{
-  constructor(x,y,dX,dY,id){
-    this.id = id
+  constructor(x,y,dX,dY,){
+    this.id = "Shrapnel_" + generateUniqueId()
     this.borderRadius = 25;
     this.x = x;
     this.y = y;
@@ -290,6 +308,7 @@ class Shrapnel{
     this.width = 25;
     this.velocityX = dX;
     this.velocityY = dY;
+    this.url = "./assets/Baseball.png"
     this.renderer = <CreateCircle/>
     this.backgroundColor = 'red';
   }
@@ -335,5 +354,24 @@ class Shrapnel{
   }
 }
 
+class Water {
+  constructor(){
+    this.id = "Water_" + generateUniqueId()
+    this.borderRadius = 100;
+    this.x = WaterPosition[0];
+    this.y = WaterPosition[1];
+    this.width = WaterSize[0];
+    this.height = WaterSize[1];
+    this.url = "./assets/Baseball.png"
+    this.renderer = <CreateCircle/>
+    this.backgroundColor = 'blue';
+  }
 
-export {Knight, Circle, Brick, counter, MoveKnight, Grenade, Shrapnel};
+  update(){
+
+  }
+}
+
+
+export {Knight, Circle, Brick, counter, MoveKnight, Grenade, Shrapnel,
+        Water,};

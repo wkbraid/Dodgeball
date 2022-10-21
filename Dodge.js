@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native';
-import { Knight, Circle, Brick, Grenade, MoveKnight, Shrapnel, counter} from "./Entities.js";
+import { Knight, Circle, Brick, Grenade, MoveKnight, 
+        Shrapnel, counter, Water} from "./Entities.js";
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
 import AxisPad from 'react-native-axis-pad';
@@ -17,8 +18,8 @@ const MAXheight = Dimensions.get('window').height;
 
 //adds an entity given its type, if it's a Grenade set a timer for explosion
 function AddEntity(entity){
-let id = generateUniqueId()
-ents[id] = new entity(id)
+ents[entity.id] = entity
+
 
 if(entity == Grenade){
   setTimeout(() => { Explode(id) }, 2000)
@@ -64,30 +65,23 @@ return(
 
 );
 }
-/*
-//creates a square component
-function CreateBrick(props){
-  return (
-     <View style={styles.container}>
-      <Image
-        style={ INSERT STYLE HERE }
-        source={require('@expo/snack-static/react-native-logo.png')}
-      />
-    
-    <View
-      style={{
+
+
+function CreateKnight(props) {
+  return(
+
+      <Image source = {require("./assets/Background.jpeg")}
+        style = {{        
         position: 'absolute',
         width: props.width,
         height: props.height,
         left: props.x,
         top: props.y,
-        backgroundColor: props.backgroundColor,
-      }}
-    />
+        id: props.id,
+        backgroundColor: props.backgroundColor,}}/>
   );
-}
-*/
-//creates a circle component
+  }
+
 function CreateCircle(props){
   return (
 
@@ -108,18 +102,14 @@ function CreateCircle(props){
 
   //creates one shrapnel in each of the cardinal directions
   function InitialShrapnel(x, y){
-          let id = generateUniqueId()
-          ents[id] =  new Shrapnel(x,y,1,0,id) 
-          setTimeout(() => { DeleteEntity(id) }, 2000)
-          id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,0,1,id)
-          setTimeout(() => { DeleteEntity(id) }, 2000)
-          id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,0,-1,id)
-          setTimeout(() => { DeleteEntity(id) }, 2000)
-          id = generateUniqueId()
-          ents[id] = new Shrapnel(x,y,-1,0,id)
-          setTimeout(() => { DeleteEntity(id) }, 2000)
+          AddEntity(new Shrapnel(x,y,1,0,))
+          //setTimeout(() => { DeleteEntity(id) }, 2000)
+          AddEntity(new Shrapnel(x,y,0,1,))
+          //setTimeout(() => { DeleteEntity(id) }, 2000)
+          AddEntity(new Shrapnel(x,y,0,-1,))
+          //setTimeout(() => { DeleteEntity(id) }, 2000)
+          AddEntity(new Shrapnel(x,y,-1,0,))
+          //setTimeout(() => { DeleteEntity(id) }, 2000)
         }
 
 // Navigates to the Results screen after an amount of time
@@ -141,12 +131,13 @@ export default function Dodge({ navigation }) {
 DeleteEntities()
 ents = {knight: new Knight() };
 setTimeout(TimeUp, 10000, navigation)
-AddEntity(Circle)
-AddEntity(Circle)
-AddEntity(Brick)
-AddEntity(Brick)
-AddEntity(Grenade)
-AddEntity(Grenade)
+AddEntity(new Circle())
+AddEntity(new Circle())
+AddEntity(new Brick())
+AddEntity(new Brick())
+AddEntity(new Grenade())
+AddEntity(new Grenade())
+AddEntity(new Water())
   return (
 <View>
     <GameEngine
@@ -176,4 +167,4 @@ AddEntity(Grenade)
     <Text>!</Text>
 </AxisPad>
 </View> */
-export { CreateCircle, CreateBrick, DeleteEntity }
+export { CreateCircle, CreateBrick, DeleteEntity, CreateKnight }
