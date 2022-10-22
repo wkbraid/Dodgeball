@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import React, { Component, PureComponent } from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native';
 import { Knight, Circle, Brick, Grenade, MoveKnight, 
         Shrapnel, counter, Water} from "./Entities.js";
@@ -8,39 +9,65 @@ import AxisPad from 'react-native-axis-pad';
 ////this looks interesting for the attacker placing/throwing projectiles:
 //https://reactnative.dev/docs/panresponder 
 //https://medium.com/yapsody-engineering/hooks-and-function-components-in-react-native-d4e667c90cda
-var ents = {}
-
-const generateUniqueId = require('generate-unique-id');
-
-const MAXwidth = Dimensions.get('window').width;
-const MAXheight = Dimensions.get('window').height;
 
 
+export default class DodgeBall extends PureComponent {
+  constructor(props)
+  {
+    super(props);
+    this.ents = {}
+    const generateUniqueId = require('generate-unique-id');
+    this.MAXwidth = Dimensions.get('window').width;
+    this.MAXheight = Dimensions.get('window').height;
+    //this.deleteEntity = this.deleteEntity.bind(this)
+    this.addEntity(new Circle());
+    this.addEntity(new Knight());
+    
+  }
+
+ // this.isLetterInWord = this.isLetterInWord.bind(this);
+
+
+  render(){
+    return(
+    <View>
+      <GameEngine
+        systems = {[this.gameLoop, ] }
+        var entities = {this.ents}>
+        <MoveKnight/>
+      </GameEngine>
+    </View>
+    );
+  }
+ 
 //adds an entity given its type, if it's a Grenade set a timer for explosion
-function AddEntity(entity){
-ents[entity.id] = entity
+addEntity (entity) {
+this.ents[entity.id] = entity
 
 
 if(entity == Grenade){
-  setTimeout(() => { Explode(id) }, 2000)
+  setTimeout(() => { explode(entity.id) }, 2000)
 }
 }
 
 //deletes a single entity given that entities unique id
-function DeleteEntity(id){
-delete(ents[id])
+deleteEntity(id)
+{
+delete(this.ents[id])
 }
 
 //blows up the grenade
-function Explode(id){
+explode(id)
+{
   //spawns shrapnel traveling from where the grenade blew up
-  InitialShrapnel(ents[id].x,ents[id].y)
+  initialShrapnel(this.ents[id].x,this.ents[id].y)
   //delete the original projectile
-  DeleteEntity(id)
+  deleteEntity(id)
 }
 
 //runs 60 times a second updating each entitiy
-function Gameloop(entities, { touches }, )  {
+gameLoop(entities, { touches }, )  
+{
   let toDelete = []
   for (let id in entities) {
       entities[id].update()
@@ -49,8 +76,9 @@ function Gameloop(entities, { touches }, )  {
 return entities
 }
 
-//creates a square component
-function CreateBrick(props) {
+//Creates a square component
+CreateBrick(props) 
+{
 return(
   //Having a dynamic call as in props.Image produces the error
   //Cannot find module './assets/Brick.jpeg'; which doesn't seem right
@@ -67,7 +95,8 @@ return(
 }
 
 
-function CreateKnight(props) {
+CreateKnight(props) 
+{
   return(
 
       <Image source = {require("./assets/Background.jpeg")}
@@ -82,9 +111,9 @@ function CreateKnight(props) {
   );
   }
 
-function CreateCircle(props){
+CreateCircle(props)
+{
   return (
-
     <Image
       source = {require("./assets/Baseball.png")}
       style={{
@@ -100,48 +129,52 @@ function CreateCircle(props){
   );
 }
 
-  //creates one shrapnel in each of the cardinal directions
-  function InitialShrapnel(x, y){
-          AddEntity(new Shrapnel(x,y,1,0,))
+  //Creates one shrapnel in each of the cardinal directions
+  initialShrapnel(x, y)
+  {
+          addEntity(new Shrapnel(x,y,1,0,))
           //setTimeout(() => { DeleteEntity(id) }, 2000)
-          AddEntity(new Shrapnel(x,y,0,1,))
+          addEntity(new Shrapnel(x,y,0,1,))
           //setTimeout(() => { DeleteEntity(id) }, 2000)
-          AddEntity(new Shrapnel(x,y,0,-1,))
+          addEntity(new Shrapnel(x,y,0,-1,))
           //setTimeout(() => { DeleteEntity(id) }, 2000)
-          AddEntity(new Shrapnel(x,y,-1,0,))
+          addEntity(new Shrapnel(x,y,-1,0,))
           //setTimeout(() => { DeleteEntity(id) }, 2000)
         }
 
 // Navigates to the Results screen after an amount of time
 // Specified by a call in the main function
-function TimeUp(navigation){
+timeUp(navigation)
+{
   navigation.navigate("Results", {counter: counter})
 }
 
 //Deletes all entities
-function DeleteEntities(){
-  for(let id in ents){
-    delete(ents[id])
+deleteEntities()
+{
+  for(let id in this.ents){
+    delete(this.ents[id])
     console.log("DeleteEntities ran")
   }
 }
 
+/*
 export default function Dodge({ navigation }) {
   //this code only runs when navigated to from the home page, why?
-DeleteEntities()
+deleteEntities()
 ents = {knight: new Knight() };
-setTimeout(TimeUp, 10000, navigation)
-AddEntity(new Circle())
-AddEntity(new Circle())
-AddEntity(new Brick())
-AddEntity(new Brick())
-AddEntity(new Grenade())
-AddEntity(new Grenade())
-AddEntity(new Water())
+setTimeout(timeUp, 10000, navigation)
+addEntity(new Circle())
+addEntity(new Circle())
+addEntity(new Brick())
+addEntity(new Brick())
+addEntity(new Grenade())
+addEntity(new Grenade())
+addEntity(new Water())
   return (
 <View>
     <GameEngine
-    systems = {[Gameloop, ] }
+    systems = {[gameLoop, ] }
     var entities = {ents}>
     <MoveKnight/>
 
@@ -152,7 +185,6 @@ AddEntity(new Water())
 }
 /* Code for Joystick, should in the GameEngine tag
 <View style={{left: MAXwidth/100, top: 3*MAXheight/4.2, backgroundcolor: "blue"}}>  
-
 <AxisPad
   //  resetOnRelease={true}
     autoCenter={true}
@@ -167,4 +199,4 @@ AddEntity(new Water())
     <Text>!</Text>
 </AxisPad>
 </View> */
-export { CreateCircle, CreateBrick, DeleteEntity, CreateKnight }
+}

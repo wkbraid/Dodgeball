@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
-import { React, Component, useEffect, useState, useRef } from 'react';
+import { React, Component, useEffect, useState, useRef, PureComponent } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
-import { CreateCircle, CreateBrick, DeleteEntity, CreateKnight } from "./Dodge.js"
+import DodgeBall from "./Dodge.js"
 import Matter from "matter-js"
 import generateUniqueId from 'generate-unique-id';
 
@@ -24,6 +24,22 @@ const Counter = () => {
   console.log({counter})
 } 
 
+function CreateSprite(props, {image}){
+  return (
+    <Image
+      source = {props.image}
+      style={{
+        position: 'absolute',
+        borderRadius: props.borderRadius,
+        width: props.width,
+        height: props.height,
+        left: props.x,
+        top: props.y,
+        backgroundColor: props.backgroundColor,
+      }}
+    />
+  );
+}
 //function to detect wasd input on computer
 function MoveKnight (){
   const Left = () => {
@@ -61,19 +77,20 @@ function MoveKnight (){
 }
 
 //main player character
-class Knight{
-
-  constructor(){
+class Knight extends Component{
+  constructor(props){
+    super(props);
     this.height = playerHeight;
     this.width = playerWidth;
     this.backgroundColor = "blue";
+    this.borderRadius = 0;
     this.id = 'knight';
     this.x = 400;
     this.y = 400;
     this.velocityX = 0;
     this.velocityY = 0;
-    this.url = "./assets/Background.jpeg";
-    this.renderer = <CreateKnight/>;
+    this.image = require("./assets/Background.jpeg");
+    this.renderer = <CreateSprite/>
     this.momentum = [0,0];
 }
 // if x and y are presse
@@ -117,8 +134,9 @@ update(){
 }
 
 
-class Brick {
-  constructor() {
+class Brick extends Component{
+  constructor(props){
+    super(props);
     this.id = "Brick_" + generateUniqueId;
     let x = Math.random()*500;
     let y = 5;
@@ -127,8 +145,9 @@ class Brick {
     this.backgroundColor = 'red';
     this.height = 75;
     this.width = 75;
-    this.url = "./assets/Baseball.png";
-    this.renderer = <CreateBrick/>;
+    this.borderRadius = 0;
+    this.image = require("./assets/Brick.jpeg")
+    this.renderer = <CreateSprite />
     let randomNum = Math.random()*3;
     this.velocityX = randomNum;
     this.velocityY = 3 - randomNum;
@@ -156,7 +175,7 @@ class Brick {
 
     }
     else{
-      DeleteEntity(this.id)
+      this.deleteEntity(this.id)
       counter += 1
     }
 
@@ -171,8 +190,9 @@ class Brick {
   }
 }
 
-class Circle {
-  constructor(){
+class Circle extends Component{
+  constructor(props){
+    super(props);
     this.id = "Circle_" + generateUniqueId();
     let x = 5
     let y = 5
@@ -181,8 +201,8 @@ class Circle {
     this.y = Math.random() * MAXheight;
     this.height = 75;
     this.width = 75;
-    this.url = "./assets/Baseball.png"
-    this.renderer = <CreateCircle/>
+    this.image = require("./assets/Baseball.png")
+    this.renderer = <CreateSprite />
     let randomNum = Math.random()*3
 
     this.velocityX = randomNum;
@@ -222,7 +242,7 @@ class Circle {
 
     }
     else{
-      DeleteEntity(this.id)
+      this.deleteEntity(this.id)
       counter += 1
     }
 
@@ -234,18 +254,19 @@ reverse() {
 }
   
 
-class Grenade {
-  constructor() {
+class Grenade extends Component{
+  constructor(props){
+    super(props);
     this.id = "Grenade_" + generateUniqueId()
     this.borderRadius = 75;
     let x = 5
     let y = Math.random()*500
     this.x = x;
     this.y = y;
-    this.url = "./assets/Baseball.png"
     this.height = 75;
     this.width = 75;
-    this.renderer = <CreateCircle/>
+    this.image= require("./assets/Baseball.png")
+    this.renderer = <CreateSprite />
 
     let randomNum = Math.random()*3
 
@@ -278,7 +299,7 @@ class Grenade {
 
     }
     else{
-      DeleteEntity(this.id)
+      this.deleteEntity(this.id)
       counter += 1
     }
 
@@ -298,8 +319,9 @@ class Grenade {
   }
 }
 
-class Shrapnel{
-  constructor(x,y,dX,dY,){
+class Shrapnel extends Component{
+  constructor(props){
+    super(props);
     this.id = "Shrapnel_" + generateUniqueId()
     this.borderRadius = 25;
     this.x = x;
@@ -308,8 +330,8 @@ class Shrapnel{
     this.width = 25;
     this.velocityX = dX;
     this.velocityY = dY;
-    this.url = "./assets/Baseball.png"
-    this.renderer = <CreateCircle/>
+    this.image = "./assets/Baseball.png"
+    this.renderer = <CreateSprite/>
     this.backgroundColor = 'red';
   }
 
@@ -354,16 +376,17 @@ class Shrapnel{
   }
 }
 
-class Water {
-  constructor(){
+class Water extends Component{
+  constructor(props){
+    super(props);
     this.id = "Water_" + generateUniqueId()
     this.borderRadius = 100;
     this.x = WaterPosition[0];
     this.y = WaterPosition[1];
     this.width = WaterSize[0];
     this.height = WaterSize[1];
-    this.url = "./assets/Baseball.png"
-    this.renderer = <CreateCircle/>
+    this.image = "./assets/Baseball.png"
+    this.renderer = <CreateSprite/>
     this.backgroundColor = 'blue';
   }
 

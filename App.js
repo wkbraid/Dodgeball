@@ -1,4 +1,4 @@
-import Dodge from "./Dodge.js";
+import DodgeBall from "./Dodge.js";
 import Home from "./Home.js";
 import Results from "./Results"
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  let Dodge = <DodgeBall/>
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
@@ -17,8 +18,9 @@ export default function App() {
         />
         <Stack.Screen 
           name="Dodge"
-          component={Dodge}
-          options={{headerShown: false}}
+          children={() => (<DodgeBall/>)}
+          //component={Dodge}
+          //options={{headerShown: false}}
         />
          <Stack.Screen 
           name="Results"
@@ -27,5 +29,4 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+  );}
