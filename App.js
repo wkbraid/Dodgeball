@@ -20,7 +20,7 @@ export default function App() {
           name="Dodge"
           children={() => (<DodgeBall/>)}
           //component={Dodge}
-          //options={{headerShown: false}}
+          options={{headerShown: false}}
         />
          <Stack.Screen 
           name="Results"
