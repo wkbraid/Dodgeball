@@ -23,12 +23,13 @@ export default class DodgeBall extends PureComponent {
     this.MAXheight = Dimensions.get('window').height;
     //this.deleteEntity = this.deleteEntity.bind(this)
     this.addEntity(new Knight(this));
-    this.addEntity(new Circle(this));
+    //this.addEntity(new Circle(this));
     this.addEntity(new Brick(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Brick(this));
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
+    this.addEntity(new Water(this))
     //setTimeout(() => { navigation.navigate("Results", {counter: counter})}, 4000)
 
 
@@ -146,7 +147,7 @@ export default class DodgeBall extends PureComponent {
   Counter = () => {
     console.log(this.counter)
   }
-  
+
 
   /*
   export default function Dodge({ navigation }) {

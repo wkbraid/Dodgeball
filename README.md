@@ -12,7 +12,7 @@ git clone https://github.com/nolan-3/Dodgeball
 ```
 npm install
 ```
-#### 3.Launch using Expo:
+#### 3. Launch using Expo:
 ```
 npm run start
 ```

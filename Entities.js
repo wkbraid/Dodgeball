@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef, PureComponent } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
+import { rectangleCollision, circleCollision, Intersection } from './Intersections.js';
 import DodgeBall from "./Dodge.js"
 import Matter from "matter-js"
 import generateUniqueId from 'generate-unique-id';
@@ -11,22 +12,18 @@ const MAXheight = Dimensions.get('window').height;
 let playerHeight = 150
 let playerWidth = 150
 let input = [0, 0, 0, 0]
-let WaterPosition = [Math.random() * MAXwidth, Math.random() * MAXheight]
-let WaterSize = [100, 100]
 //      left,right,up,down (w,a,s,d) each stores a value, 0 = not pressed
 
 // TODO: fix intersections between circle and rectangle
 //count intersections with players
-class Shape extends PureComponent{
+class Shape extends PureComponent {
   constructor(props) {
     super(props);
-    this.x = 10;
-    this.y = Math.random()*500;
     this.height = 75;
     this.width = 75;
-    this.color = "red"
+    this.backgroundColor = "red"
     let randomNum = Math.random() * 3;
-    this.momentum = [randomNum, 3-randomNum]
+    this.momentum = [randomNum, 3 - randomNum]
   }
   update() {
     // all shapes move and have momentum
@@ -51,6 +48,8 @@ function CreateSprite(props,) {
     />
   );
 }
+
+
 //function to detect wasd input on computer
 function MoveKnight() {
   const Left = () => {
@@ -87,6 +86,11 @@ function MoveKnight() {
   UseOnKeyRelease(UndoDown, 's')
 }
 
+function slow(entity) {
+  entity.momentum[0] *= .8
+  entity.momentum[1] *= .8
+}
+
 //main player character
 class Knight extends PureComponent {
   constructor(props) {
@@ -94,7 +98,6 @@ class Knight extends PureComponent {
     this.height = playerHeight;
     this.width = playerWidth;
     this.backgroundColor = "blue";
-    this.borderRadius = 0;
     this.id = 'knight';
     this.x = 400;
     this.y = 400;
@@ -102,40 +105,40 @@ class Knight extends PureComponent {
     this.renderer = <CreateSprite />
     this.momentum = [0, 0];
   }
-  // if x and y are pressed
+
   //update knights position
   update() {
-    let accelerationX = (input[1] - input[0])/4
-    let accelerationY = (input[3] - input[2])/4
+    let accelerationX = (input[1] - input[0]) / 4
+    let accelerationY = (input[3] - input[2]) / 4
 
 
     this.momentum[0] += accelerationX;
-if (Math.abs(this.momentum[0]) > 4) { 
-  this.momentum[0] = Math.sign(this.momentum[0]) * 4
-}
- 
-this.momentum[1] += accelerationY;
-if (Math.abs(this.momentum[1]) > 4) { 
-  this.momentum[1] = Math.sign(this.momentum[1]) * 4
-}
+    if (Math.abs(this.momentum[0]) > 4) {
+      this.momentum[0] = Math.sign(this.momentum[0]) * 4
+    }
+
+    this.momentum[1] += accelerationY;
+    if (Math.abs(this.momentum[1]) > 4) {
+      this.momentum[1] = Math.sign(this.momentum[1]) * 4
+    }
     //slow the knights velocity by a small amount (to lessen drifting)
     this.momentum[0] -= .01 * Math.sign(this.momentum[0])
     this.momentum[1] -= .01 * Math.sign(this.momentum[1])
 
     //check if the knight is in water, slow the knight if it is
-    if (this.y + this.width < WaterPosition[1] || this.y > WaterPosition[1] + WaterSize[1]) {
-    }
-    else if (this.x > WaterPosition[0] + WaterSize[0] || this.x + this.width < WaterPosition[0]) {
-
-    }
-    else {
-      this.momentum[0] *= .8
-      this.momentum[1] *= .8
-    }
-//update the knights position 
+    /* if (this.y + this.width < this.prop.ents['Water'] || this.y > WaterPosition[1] + WaterSize[1]) {
+     }
+     else if (this.x > WaterPosition[0] + WaterSize[0] || this.x + this.width < WaterPosition[0]) {
+ 
+     }
+     else {
+       this.momentum[0] *= .8
+       this.momentum[1] *= .8
+     }*/
+    //update the knights position 
     this.x += this.momentum[0]
     this.y += this.momentum[1]
-    
+
 
   }
 }
@@ -144,6 +147,8 @@ if (Math.abs(this.momentum[1]) > 4) {
 class Brick extends Shape {
   constructor(props) {
     super(props);
+    this.x = 10;
+    this.y = Math.random() * 500;
     this.id = "Brick_" + generateUniqueId();
     this.image = require("./assets/Brick.jpeg")
     this.renderer = <CreateSprite />
@@ -164,16 +169,7 @@ class Brick extends Shape {
       this.reverse(1, -1)
     }
 
-    //check for player intersections  
-    if (this.y + this.width < this.props.ents['knight'].y || this.y > this.props.ents['knight'].y + playerHeight) {
-    }
-    else if (this.x > this.props.ents['knight'].x + playerWidth || this.x + this.width < this.props.ents['knight'].x) {
-
-    }
-    else {
-      this.props.deleteEntity(this.id)
-      this.props.counter += 1
-    }
+    rectangleCollision(this, this.props.ents['knight'], Intersection)
 
     //updating the bricks position
     super.update()
@@ -188,8 +184,10 @@ class Brick extends Shape {
 class Circle extends Shape {
   constructor(props) {
     super(props);
+    this.x = 10;
+    this.y = Math.random() * 500;
     this.id = "Circle_" + generateUniqueId();
-    this.borderRadius = 75;
+    this.borderRadius = 75 / 2;
     this.image = require("./assets/Baseball.png")
     this.renderer = <CreateSprite />
   }
@@ -236,6 +234,7 @@ class Circle extends Shape {
     //check if there is a possible for up down
     //check if there is a possible for right left
     //check if those two things overlap
+    /*
     if (this.y + this.width < this.props.ents['knight'].y || this.y > this.props.ents['knight'].y + playerHeight) {
     }
     else if (this.x > this.props.ents['knight'].x + playerWidth || this.x + this.width < this.props.ents['knight'].x) {
@@ -245,7 +244,9 @@ class Circle extends Shape {
       this.props.deleteEntity(this.id)
       //props.[Prototype].deleteEntity(this.id)
       this.props.counter += 1
-    }
+    }*/
+
+    circleCollision(this, this.props.ents['knight'])
 
   }
   reverse() {
@@ -259,6 +260,8 @@ class Grenade extends Shape {
   constructor(props) {
     console.log(props)
     super(props);
+    this.x = 10;
+    this.y = Math.random() * 500;
     this.id = "Grenade_" + generateUniqueId()
     this.borderRadius = 75;
     this.image = require("./assets/Baseball.png")
@@ -299,16 +302,7 @@ class Grenade extends Shape {
       this.reverse()
     }
 
-    //check for intersections with player
-    if (this.y + this.width < this.props.ents['knight'].y || this.y > this.props.ents['knight'].y + playerHeight) {
-    }
-    else if (this.x > this.props.ents['knight'].x + playerWidth || this.x + this.width < this.props.ents['knight'].x) {
-
-    }
-    else {
-      this.props.deleteEntity(this.id)
-      this.props.counter += 1
-    }
+    circleCollision(this, this.props.ents['knight'])
 
     //updating the Grenades position
     super.update()
@@ -347,60 +341,31 @@ class Shrapnel extends Shape {
     super.update()
     this.momentum[0] += this.momentum[0] / 75
     this.momentum[1] += this.momentum[1] / 75
-
-    /*preliminary checks to see if the x or y by itself rules out 
-    if (this.x + this.width / 2 < this.props.ents['knight'].x || this.x - this.height / 2 > this.props.ents['knight'].x) {
-      return
-    }
-    else if (this.y + this.height / 2 < this.props.ents['knight'].y || this.y - this.height / 2 > this.props.ents['knight'].x) {
-      return
-    }*/
-
-    let x1 = this.props.ents['knight'].x
-    let y1 = this.props.ents['knight'].y
-
-    //check if its above or below
-    if (this.y > this.props.ents['knight'].y) {
-      //then it's below
-      y1 = this.props.ents['knight'].y + playerHeight
-    }
-
-    if (this.x > this.props.ents['knight'].y) {
-      //then its above
-      x1 = this.props.ents['knight'].x + playerWidth
-    }
-
-    /*if (Math.sqrt((x1 - this.x, 2) + Math.pow(y1 - this.y, 2))) {
-      this.props.counter++
-    }*/
-
-
-    //check if its to the right or the left
-
+    circleCollision(this, this.props.ents['knight'])
   }
 }
 
 class Water extends Component {
   constructor(props) {
     super(props);
-    this.id = "Water_" + generateUniqueId()
-    this.borderRadius = 100;
-    this.x = WaterPosition[0];
-    this.y = WaterPosition[1];
-    this.width = WaterSize[0];
-    this.height = WaterSize[1];
-    this.image = "./assets/Baseball.png"
+    this.id = "Water"; /* + generateUniqueId()*/
+    this.borderRadius = 100 / 2;
+    this.x = Math.random() * 500;
+    this.y = Math.random() * 500;
+    this.width = 100;
+    this.height = 100;
+    //this.image = "./assets/Baseball.png"
     this.renderer = <CreateSprite />
     this.backgroundColor = 'blue';
   }
 
   update() {
-
+    circleCollision(this, this.props.ents['knight'], slow, true)
   }
 }
 
 
 export {
   Knight, Circle, Brick, MoveKnight, Grenade, Shrapnel,
-  Water,
+  Water, slow,
 };
