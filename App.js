@@ -1,6 +1,7 @@
 import DodgeBallGame from "./Dodge.js";
 import Home from "./Home.js";
 import Results from "./Results"
+import Battle from "./Battle.js"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -14,6 +15,11 @@ export default function App() {
         <Stack.Screen 
           name="Home"
           component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="Battle"
+          component={Battle}
           options={{headerShown: false}}
         />
         <Stack.Screen 

@@ -8,7 +8,7 @@ export default function Home({ navigation }) {
         <ImageBackground
         style={styles.background}
         source={require('./assets/Background.jpeg')}> 
-        <Pressable style={styles.button} onPress={() => navigation.navigate("Dodge")}>
+        <Pressable style={styles.button} onPress={() => navigation.navigate("Battle")}>
       <Text style={styles.text}>Play</Text>
             </Pressable>
        </ImageBackground>
@@ -40,3 +40,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     }, })
+
+    export {styles}
