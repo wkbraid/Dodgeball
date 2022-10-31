@@ -13,9 +13,8 @@ import AxisPad from 'react-native-axis-pad';
 //https://medium.com/yapsody-engineering/hooks-and-function-components-in-react-native-d4e667c90cda
 
 export default function DodgeBallGame({ navigation }) {
-  setTimeout(() => { navigation.navigate("Results", {counter: 'whee'})}, 20000)
   return (
-      <DodgeBall/>
+      <DodgeBall nav = {navigation}/>
   )  
 }
 
@@ -24,6 +23,7 @@ class DodgeBall extends PureComponent {
     super(props);
     this.ents = {}
     this.counter = 0
+    this.nav = props.nav
     const generateUniqueId = require('generate-unique-id');
     this.MAXwidth = Dimensions.get('window').width;
     this.MAXheight = Dimensions.get('window').height;
@@ -36,6 +36,7 @@ class DodgeBall extends PureComponent {
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Water(this))
+    setTimeout(() => { this.nav.navigate("Results", {counter: 'whee'})}, 20000)
 
 
   }

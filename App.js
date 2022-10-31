@@ -8,7 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // let Dodge = <DodgeBall/>
+   // let Dodge = <DodgeBall nav = {navigation}/>
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
