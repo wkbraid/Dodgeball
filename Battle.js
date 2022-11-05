@@ -2,14 +2,37 @@
 Main battle screen, should display 2 knights with health bars and a 
 button for each different ability*/
 
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
-import { Dimensions, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Dimensions, Pressable } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
 import { HealthBar } from "./HealthBar.js"
+import { score } from "./Dodge.js"
+import { useFocusEffect } from '@react-navigation/native';
+import { hookstate, useHookstate, createState } from '@hookstate/core';
+// .value: Gets the value of the state
+// .set(): Sets the value of the state
+
 
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
+//const [health, setHealth] = useState(100);
+const health = createState(100);
 
 export default function Battle({ navigation, route }) {
+    const healthState = useHookstate(health);
+    //function which runs when the screen is 'focused' e.g. visible
+    useFocusEffect(
+        React.useCallback(() => {
+            healthState.set(calculateDamage())
+        }, [])
+    );
+    console.log(healthState.value)
+
+    function calculateDamage() {
+        console.log(score)
+        let newHealth = healthState.value - (score * .15)
+    return (newHealth)
+    }
+
 
     return (
         <View style={{
@@ -21,7 +44,7 @@ export default function Battle({ navigation, route }) {
                 width: MAXwidth / 2, height: MAXheight,
                 left: 100, top: 0
             }}>
-                <HealthBar playerNum={1} />
+                <HealthBar playerNum={1} health={healthState.value} />
 
                 <Image
                     source={require("./assets/knight1.jpg")}
@@ -51,7 +74,7 @@ export default function Battle({ navigation, route }) {
                 height: MAXheight, width: MAXwidth / 2,
                 position: 'absolute', left: MAXwidth / 2
             }}>
-                <HealthBar playerNum={1} />
+                <HealthBar playerNum={1} health={healthState.value} />
                 <Image
                     source={require("./assets/knight1.jpg")}
                     style={{
@@ -98,3 +121,4 @@ const styles = StyleSheet.create({
 
     },
 })
+export { health }

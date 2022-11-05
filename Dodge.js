@@ -11,7 +11,7 @@ import AxisPad from 'react-native-axis-pad';
 ////this looks interesting for the attacker placing/throwing projectiles:
 //https://reactnative.dev/docs/panresponder 
 //https://medium.com/yapsody-engineering/hooks-and-function-components-in-react-native-d4e667c90cda
-
+let score = 0
 export default function DodgeBallGame({ navigation }) {
   return (
       <DodgeBall nav = {navigation}/>
@@ -36,7 +36,7 @@ class DodgeBall extends PureComponent {
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Water(this))
-    setTimeout(() => { this.nav.navigate("Results", {counter: 'whee'})}, 20000)
+    setTimeout(() => {this.nav.navigate("Battle")}, 5000)
 
 
   }
@@ -64,6 +64,7 @@ class DodgeBall extends PureComponent {
   //deletes a single entity given that entities unique id
   deleteEntity(id) {
     delete (this.ents[id])
+    score += 10
   }
 
   //blows up the grenade
@@ -139,7 +140,7 @@ class DodgeBall extends PureComponent {
   // Navigates to the Results screen after an amount of time
   // Specified by a call in the main function
   timeUp(navigation) {
-    navigation.navigate("Results", { counter: this.counter })
+    navigation.navigate("Battle",)
   }
 
   //Deletes all entities
@@ -197,3 +198,4 @@ class DodgeBall extends PureComponent {
   </AxisPad>
   </View> */
 }
+export { score }

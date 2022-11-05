@@ -258,7 +258,6 @@ class Circle extends Shape {
 
 class Grenade extends Shape {
   constructor(props) {
-    console.log(props)
     super(props);
     this.x = 10;
     this.y = Math.random() * 500;
@@ -322,7 +321,6 @@ class Grenade extends Shape {
 
 class Shrapnel extends Shape {
   constructor(props, info) {
-    console.log(props)
     super(props);
     this.id = "Shrapnel_" + generateUniqueId()
     this.borderRadius = 25;
