@@ -15,21 +15,21 @@ import { hookstate, useHookstate, createState } from '@hookstate/core';
 const MAXwidth = Dimensions.get('window').width;
 const MAXheight = Dimensions.get('window').height;
 //const [health, setHealth] = useState(100);
-const health = createState(100);
+const health2 = createState(100);
 
 export default function Battle({ navigation, route }) {
-    const healthState = useHookstate(health);
+    const healthState2 = useHookstate(health2);
     //function which runs when the screen is 'focused' e.g. visible
     useFocusEffect(
         React.useCallback(() => {
-            healthState.set(calculateDamage())
+            healthState2.set(calculateDamage())
         }, [])
     );
-    console.log(healthState.value)
+    console.log(healthState2.value)
 
     function calculateDamage() {
         console.log(score)
-        let newHealth = healthState.value - (score * .15)
+        let newHealth = healthState2.value - (score * .15)
     return (newHealth)
     }
 
@@ -44,7 +44,7 @@ export default function Battle({ navigation, route }) {
                 width: MAXwidth / 2, height: MAXheight,
                 left: 100, top: 0
             }}>
-                <HealthBar playerNum={1} health={healthState.value} />
+                <HealthBar playerNum={1} health={100} />
 
                 <Image
                     source={require("./assets/knight1.jpg")}
@@ -74,7 +74,7 @@ export default function Battle({ navigation, route }) {
                 height: MAXheight, width: MAXwidth / 2,
                 position: 'absolute', left: MAXwidth / 2
             }}>
-                <HealthBar playerNum={1} health={healthState.value} />
+                <HealthBar playerNum={1} health={healthState2.value} />
                 <Image
                     source={require("./assets/knight1.jpg")}
                     style={{
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
 
     },
 })
-export { health }
+export { health2 }

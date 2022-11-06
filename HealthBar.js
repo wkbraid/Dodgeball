@@ -11,9 +11,11 @@ let previousHealth = 0
 //usepreviousstate, add animation for health bar eventually
 function HealthBar(props) {
   const healthState = useHookstate(health);
+  let health = props.health
   //state probably isnt necessary here
-  const [healthColor, setHealthColor] = useState('#00FF00')
-  console.log("in HealthBar.js health is: " + healthState.value)
+  //let healthColor = getColor()
+  let healthColor = '#00FF00'
+  console.log("in HealthBar.js health is: " + health)
   //console.log(healthColor)
   let maxWidth = (MAXwidth / 10)
   let maxHealth = 100
@@ -25,9 +27,6 @@ function HealthBar(props) {
     
     previousHealth = health
   }*/
-
- 
-  //setHealthColor(getColor())
 
 
 
@@ -97,7 +96,7 @@ function HealthBar(props) {
       height: 40,
       top: -2,
       left: -2,
-      width: maxWidth * healthState.value / maxHealth,
+      width: maxWidth * health / maxHealth,
       backgroundColor: healthColor,
       borderColor: '#dc143c',
       borderWidth: 2,
