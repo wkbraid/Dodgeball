@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, PureComponent } from 'react';
 import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native';
 import {
-  Knight, Circle, Brick, Grenade, MoveKnight,
-  Shrapnel, Water
+  Knight, Circle, Brick, Grenade,
+  Shrapnel, Water, KeyListeners
 } from "./Entities.js";
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
@@ -13,6 +13,7 @@ import AxisPad from 'react-native-axis-pad';
 //https://medium.com/yapsody-engineering/hooks-and-function-components-in-react-native-d4e667c90cda
 let score = 0
 export default function DodgeBallGame({ navigation }) {
+  console.log("DodgeBallGame is called")
   return (
       <DodgeBall nav = {navigation}/>
   )  
@@ -23,8 +24,8 @@ class DodgeBall extends PureComponent {
     super(props);
     this.ents = {}
     this.counter = 0
-    this.nav = props.nav
-    const generateUniqueId = require('generate-unique-id');
+    //this.nav = props.nav
+    //this.generateUniqueId = require('generate-unique-id');
     this.MAXwidth = Dimensions.get('window').width;
     this.MAXheight = Dimensions.get('window').height;
     //this.deleteEntity = this.deleteEntity.bind(this)
@@ -36,9 +37,9 @@ class DodgeBall extends PureComponent {
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Water(this))
-    setTimeout(() => {this.nav.navigate("Battle")}, 5000)
+    //setTimeout(() => {this.nav.navigate("Battle")}, 5000)
 
-
+    console.log("DodgeBall is called")
   }
 
   // this.isLetterInWord = this.isLetterInWord.bind(this);
@@ -50,7 +51,7 @@ class DodgeBall extends PureComponent {
         <GameEngine
           systems={[this.gameLoop,]}
           var entities={this.ents}>
-          <MoveKnight />
+          <KeyListeners />
         </GameEngine>
       </View>
     );
@@ -67,80 +68,13 @@ class DodgeBall extends PureComponent {
     score += 10
   }
 
-  //blows up the grenade
-  explode(id) {
-    //spawns shrapnel traveling from where the grenade blew up
-    initialShrapnel(this.ents[id].x, this.ents[id].y)
-    //delete the original projectile
-    deleteEntity(id)
-  }
-
   //runs 60 times a second updating each entitiy
-  gameLoop(entities, { touches },) {
-    let toDelete = []
+  gameLoop(entities,) {
     for (let id in entities) {
       entities[id].update()
     }
 
     return entities
-  }
-
-  //Creates a square component
-  CreateBrick(props) {
-    return (
-      //Having a dynamic call as in props.Image produces the error
-      //Cannot find module './assets/Brick.jpeg'; which doesn't seem right
-      <Image source={require("./assets/Brick.jpeg")}
-        style={{
-          position: 'absolute',
-          width: props.width,
-          height: props.height,
-          left: props.x,
-          top: props.y,
-          backgroundColor: props.backgroundColor,
-        }} />
-    );
-  }
-
-
-  CreateKnight(props) {
-    return (
-
-      <Image source={require("./assets/Background.jpeg")}
-        style={{
-          position: 'absolute',
-          width: props.width,
-          height: props.height,
-          left: props.x,
-          top: props.y,
-          id: props.id,
-          backgroundColor: props.backgroundColor,
-        }} />
-    );
-  }
-
-  CreateCircle(props) {
-    return (
-      <Image
-        source={require("./assets/Baseball.png")}
-        style={{
-          position: 'absolute',
-          borderRadius: props.borderRadius,
-          width: props.width,
-          height: props.height,
-          left: props.x,
-          top: props.y,
-          backgroundColor: props.backgroundColor,
-        }}
-      />
-    );
-  }
-
-
-  // Navigates to the Results screen after an amount of time
-  // Specified by a call in the main function
-  timeUp(navigation) {
-    navigation.navigate("Battle",)
   }
 
   //Deletes all entities
@@ -174,7 +108,7 @@ class DodgeBall extends PureComponent {
       <GameEngine
       systems = {[gameLoop, ] }
       var entities = {ents}>
-      <MoveKnight/>
+      <KeyListeners/>
   
       
       </GameEngine>
@@ -198,4 +132,4 @@ class DodgeBall extends PureComponent {
   </AxisPad>
   </View> */
 }
-export { score }
+export { score, DodgeBall }

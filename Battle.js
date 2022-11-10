@@ -1,11 +1,7 @@
-/*TODO: 
-Main battle screen, should display 2 knights with health bars and a 
-button for each different ability*/
-
 import { StyleSheet, Text, View, Button, Image, Dimensions, Pressable } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import { HealthBar } from "./HealthBar.js"
-import { score } from "./Dodge.js"
+import DodgeBallGame, { score, DodgeBall } from "./Dodge.js"
 import { useFocusEffect } from '@react-navigation/native';
 import { hookstate, useHookstate, createState } from '@hookstate/core';
 // .value: Gets the value of the state
@@ -19,6 +15,10 @@ const health2 = createState(100);
 
 export default function Battle({ navigation, route }) {
     const healthState2 = useHookstate(health2);
+
+    if(healthState2.value <= 0){
+        console.log("dead")
+    }
     //function which runs when the screen is 'focused' e.g. visible
     useFocusEffect(
         React.useCallback(() => {
@@ -58,14 +58,14 @@ export default function Battle({ navigation, route }) {
                     }}
                 />
 
-                <Pressable style={styles.button} onPress={() => navigation.navigate("Dodge")}>
-                    <Text style={styles.text}>Test Ability</Text>
+                <Pressable style={styles.button} onPress={() => new DodgeBall()}>
+                    <Text style={styles.text}>DodgeBall</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => navigation.navigate("Dodge")}>
-                    <Text style={styles.text}>Test Ability2</Text>
+                <Pressable style={styles.button} onPress={() => navigation.navigate("StormCastle")}>
+                    <Text style={styles.text}>Castle</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => navigation.navigate("Dodge")}>
-                    <Text style={styles.text}>Test Ability3</Text>
+                <Pressable style={styles.button} onPress={() => navigation.navigate("Matter")}>
+                    <Text style={styles.text}>MatterJS</Text>
                 </Pressable>
             </View>
 

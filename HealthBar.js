@@ -12,16 +12,14 @@ let previousHealth = 0
 function HealthBar(props) {
   const healthState = useHookstate(health);
   let health = props.health
-  //state probably isnt necessary here
-  //let healthColor = getColor()
-  let healthColor = '#00FF00'
-  console.log("in HealthBar.js health is: " + health)
-  //console.log(healthColor)
+  if(health < 0){
+    health = 0;
+  }
   let maxWidth = (MAXwidth / 10)
   let maxHealth = 100
-  let red = 'FF'
-  let green = 'FF'
-  let blue = '00'
+  let healthColor = getColor(health, maxHealth)
+  console.log("in HealthBar.js health is: " + health)
+
   /*
   if(health != previousHealth){
     
@@ -32,20 +30,22 @@ function HealthBar(props) {
 
   //TODO: increase red up to 255 to get to yellow
   //then decrease green down to 0 to get to red
-  function getColor() {
+  function getColor(health, maxHealth) {
     let redNeedsZero = false
     let greenNeedsZero = false
     let color = "#";
 
     //(100)green -> (50%)yellow -> (0%)red
     //red should change 255 in just 50 health = 5.1 per health
-    if (health > 50) {
-      red = Math.floor((maxHealth - health) * 5.1)
+      let red = Math.floor((maxHealth - health) * 5.1)
 
+      if(red > 255){
+        red = 255
+      }
       //anything less than 16 only converts to one hexadecimal 
       //symbol we need to add a zero in front of the digit 
       //so its recognized as hex
-      if (red < 16) {
+      else if (red < 16) {
         console.log("red needs a 0 because it is " + red)
         redNeedsZero = true
       }
@@ -55,10 +55,13 @@ function HealthBar(props) {
         red = '0' + red
         redNeedsZero = false
       }
-    }
 
-    else {
-      green = Math.floor((health) * 5.1)
+      let green = Math.floor((health) * 5.1)
+
+      if(green > 255){
+        green = 255
+      }
+
       if (green < 16) {
         greenNeedsZero = true
       }
@@ -67,13 +70,13 @@ function HealthBar(props) {
         green = '0' + green
         greenNeedsZero = false
       }
-    }
+
     console.log("red " + red)
     color += red
     console.log("green " + green)
     color += green
-    console.log("blue " + blue)
-    color += blue
+    //blue is constant
+    color += "00"
     console.log(color)
 
     return color;

@@ -1,6 +1,8 @@
 import DodgeBallGame from "./Dodge.js";
 import Home from "./Home.js";
-import Battle from "./Battle.js"
+import Battle from "./Battle.js";
+import StormCastle from "./StormCastle.js";
+import MatterTest from "./MatterTest.js";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -27,6 +29,16 @@ export default function App() {
           component={DodgeBallGame}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="StormCastle"
+          component={StormCastle}
+          options={{headerShown: false}}
+          />
+          <Stack.Screen
+          name="Matter"
+          component={MatterTest}
+          options={{headerShown: false}}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );}

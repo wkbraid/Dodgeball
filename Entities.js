@@ -14,8 +14,7 @@ let playerWidth = 150
 let input = [0, 0, 0, 0]
 //      left,right,up,down (w,a,s,d) each stores a value, 0 = not pressed
 
-// TODO: fix intersections between circle and rectangle
-//count intersections with players
+
 class Shape extends PureComponent {
   constructor(props) {
     super(props);
@@ -51,7 +50,7 @@ function CreateSprite(props,) {
 
 
 //function to detect wasd input on computer
-function MoveKnight() {
+function KeyListeners() {
   const Left = () => {
     input[0] = 1.5
   }
@@ -102,8 +101,8 @@ class Knight extends PureComponent {
     this.x = 400;
     this.y = 400;
     this.image = require("./assets/Background.jpeg");
-    this.renderer = <CreateSprite />
     this.momentum = [0, 0];
+    this.renderer = <CreateSprite />;
   }
 
   //update knights position
@@ -150,8 +149,8 @@ class Brick extends Shape {
     this.x = 10;
     this.y = Math.random() * 500;
     this.id = "Brick_" + generateUniqueId();
-    this.image = require("./assets/Brick.jpeg")
-    this.renderer = <CreateSprite />
+    this.image = require("./assets/Brick.jpeg");
+    this.renderer = <CreateSprite />;
   }
 
   update() {
@@ -189,7 +188,7 @@ class Circle extends Shape {
     this.id = "Circle_" + generateUniqueId();
     this.borderRadius = 75 / 2;
     this.image = require("./assets/Baseball.png")
-    this.renderer = <CreateSprite />
+    this.renderer = <CreateSprite />;
   }
 
   /*render() {
@@ -261,7 +260,7 @@ class Grenade extends Shape {
     super(props);
     this.x = 10;
     this.y = Math.random() * 500;
-    this.id = "Grenade_" + generateUniqueId()
+    this.id = "Grenade_" + generateUniqueId();
     this.borderRadius = 75;
     this.image = require("./assets/Baseball.png")
     this.renderer = <CreateSprite />
@@ -322,7 +321,7 @@ class Grenade extends Shape {
 class Shrapnel extends Shape {
   constructor(props, info) {
     super(props);
-    this.id = "Shrapnel_" + generateUniqueId()
+    this.id = "Shrapnel_" + generateUniqueId();
     this.borderRadius = 25;
     this.x = info[0];
     this.y = info[1];
@@ -364,6 +363,6 @@ class Water extends Component {
 
 
 export {
-  Knight, Circle, Brick, MoveKnight, Grenade, Shrapnel,
-  Water, slow,
+  Knight, Circle, Brick, KeyListeners, Grenade, Shrapnel,
+  Water, slow, CreateSprite
 };
