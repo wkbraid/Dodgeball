@@ -51,6 +51,10 @@ function CreateSprite(props,) {
 
 //function to detect wasd input on computer
 function KeyListeners() {
+  for (let i = 0; i < 4; i++){
+    input[i] = 0
+  }
+  
   const Left = () => {
     input[0] = 1.5
   }

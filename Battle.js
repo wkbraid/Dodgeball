@@ -4,6 +4,7 @@ import { HealthBar } from "./HealthBar.js"
 import DodgeBallGame, { score, DodgeBall } from "./Dodge.js"
 import { useFocusEffect } from '@react-navigation/native';
 import { hookstate, useHookstate, createState } from '@hookstate/core';
+import StormCastle from './StormCastle.js';
 // .value: Gets the value of the state
 // .set(): Sets the value of the state
 
@@ -14,7 +15,14 @@ const MAXheight = Dimensions.get('window').height;
 const health2 = createState(100);
 
 export default function Battle({ navigation, route }) {
+
     const healthState2 = useHookstate(health2);
+    const [score, setScore] = useState(0)
+    const [currentScreen, setScreen] = useState("battle")
+
+    function changeScreen(screenName){
+        setScreen(screenName)
+    }
 
     if(healthState2.value <= 0){
         console.log("dead")
@@ -22,18 +30,18 @@ export default function Battle({ navigation, route }) {
     //function which runs when the screen is 'focused' e.g. visible
     useFocusEffect(
         React.useCallback(() => {
+            let score = 0
             healthState2.set(calculateDamage())
-        }, [])
+        }, [score])
     );
-    console.log(healthState2.value)
 
     function calculateDamage() {
-        console.log(score)
         let newHealth = healthState2.value - (score * .15)
     return (newHealth)
     }
 
 
+    if ( currentScreen == "battle"){
     return (
         <View style={{
             width: MAXwidth, height: MAXheight, backgroundColor: '#404040',
@@ -58,10 +66,10 @@ export default function Battle({ navigation, route }) {
                     }}
                 />
 
-                <Pressable style={styles.button} onPress={() => new DodgeBall()}>
+                <Pressable style={styles.button} onPress={() => setScreen("dodge")}>
                     <Text style={styles.text}>DodgeBall</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => navigation.navigate("StormCastle")}>
+                <Pressable style={styles.button} onPress={() => setScreen("castle")}>
                     <Text style={styles.text}>Castle</Text>
                 </Pressable>
                 <Pressable style={styles.button} onPress={() => navigation.navigate("Matter")}>
@@ -93,6 +101,16 @@ export default function Battle({ navigation, route }) {
 
 
     )
+                }
+
+                else if (currentScreen == 'dodge'){
+                    return <DodgeBall changeScreen = {changeScreen} 
+                    setScore = {setScore}/>
+                }
+                else if (currentScreen == 'castle'){
+                    return <StormCastle changeScreen = {changeScreen}
+                    setScore = {setScore}/>
+                }
 }
 
 

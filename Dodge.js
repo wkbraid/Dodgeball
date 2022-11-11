@@ -11,38 +11,27 @@ import AxisPad from 'react-native-axis-pad';
 ////this looks interesting for the attacker placing/throwing projectiles:
 //https://reactnative.dev/docs/panresponder 
 //https://medium.com/yapsody-engineering/hooks-and-function-components-in-react-native-d4e667c90cda
-let score = 0
-export default function DodgeBallGame({ navigation }) {
-  console.log("DodgeBallGame is called")
-  return (
-      <DodgeBall nav = {navigation}/>
-  )  
-}
+
 
 class DodgeBall extends PureComponent {
   constructor(props) {
     super(props);
+    this.score = 0
     this.ents = {}
     this.counter = 0
-    //this.nav = props.nav
     //this.generateUniqueId = require('generate-unique-id');
     this.MAXwidth = Dimensions.get('window').width;
     this.MAXheight = Dimensions.get('window').height;
-    //this.deleteEntity = this.deleteEntity.bind(this)
     this.addEntity(new Knight(this));
-    //this.addEntity(new Circle(this));
     this.addEntity(new Brick(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Brick(this));
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Water(this))
-    //setTimeout(() => {this.nav.navigate("Battle")}, 5000)
-
-    console.log("DodgeBall is called")
+    setTimeout(() => {this.props.setScore(this.score); 
+    this.props.changeScreen('battle')} , 3000 )
   }
-
-  // this.isLetterInWord = this.isLetterInWord.bind(this);
 
 
   render() {
@@ -65,7 +54,7 @@ class DodgeBall extends PureComponent {
   //deletes a single entity given that entities unique id
   deleteEntity(id) {
     delete (this.ents[id])
-    score += 10
+    this.score += 10
   }
 
   //runs 60 times a second updating each entitiy
@@ -132,4 +121,4 @@ class DodgeBall extends PureComponent {
   </AxisPad>
   </View> */
 }
-export { score, DodgeBall }
+export { DodgeBall }
