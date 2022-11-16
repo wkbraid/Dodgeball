@@ -3,8 +3,6 @@ import { Dimensions, Keyboard } from 'react-native';
 import { React, Component, useEffect, useState, useRef, PureComponent } from 'react';
 import { UseOnKeyPress, UseOnKeyRelease } from "./Key.js"
 import { rectangleCollision, circleCollision, Intersection } from './Intersections.js';
-import DodgeBall from "./Dodge.js"
-import Matter from "matter-js"
 import generateUniqueId from 'generate-unique-id';
 
 const MAXwidth = Dimensions.get('window').width;

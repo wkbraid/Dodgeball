@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Button, Image, Dimensions, Pressable } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import { HealthBar } from "./HealthBar.js"
-import DodgeBallGame, { score, DodgeBall } from "./Dodge.js"
+import BirdGame from "./Minigames/Flappy/FlappyBird.js"
+import DodgeBallGame, { score, DodgeBall } from "./Minigames/Dodge.js"
 import { useFocusEffect } from '@react-navigation/native';
 import { hookstate, useHookstate, createState } from '@hookstate/core';
-import StormCastle from './StormCastle.js';
 // .value: Gets the value of the state
 // .set(): Sets the value of the state
 
@@ -96,11 +96,8 @@ export default function Battle({ navigation, route }) {
                 />
             </View>
         </View>
-
-
-
-
     )
+
                 }
 
                 else if (currentScreen == 'dodge'){
@@ -108,7 +105,7 @@ export default function Battle({ navigation, route }) {
                     setScore = {setScore}/>
                 }
                 else if (currentScreen == 'castle'){
-                    return <StormCastle changeScreen = {changeScreen}
+                    return <BirdGame changeScreen = {changeScreen}
                     setScore = {setScore}/>
                 }
 }

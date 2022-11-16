@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Dimensions, Button, Image } from 'react-native'
 import {
   Knight, Circle, Brick, Grenade,
   Shrapnel, Water, KeyListeners
-} from "./Entities.js";
+} from "../Entities.js";
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
 import AxisPad from 'react-native-axis-pad';
