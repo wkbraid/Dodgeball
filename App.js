@@ -1,12 +1,13 @@
-import Dodge from "./Dodge.js";
 import Home from "./Home.js";
-import Results from "./Results"
+import Battle from "./Battle.js";
+import MatterTest from "./MatterTest.js";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+   // let Dodge = <DodgeBall nav = {navigation}/>
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
@@ -16,16 +17,16 @@ export default function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen 
-          name="Dodge"
-          component={Dodge}
+          name="Battle"
+          component={Battle}
           options={{headerShown: false}}
         />
-         <Stack.Screen 
-          name="Results"
-          component={Results}
+          <Stack.Screen
+          name="Matter"
+          component={MatterTest}
           options={{headerShown: false}}
-        />
+          />
+          
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+  );}
