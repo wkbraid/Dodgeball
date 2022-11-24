@@ -5,7 +5,7 @@ import BirdGame from "./Minigames/Flappy/FlappyBird.js"
 import DodgeBallGame, { score, DodgeBall } from "./Minigames/Dodge.js"
 import { useFocusEffect } from '@react-navigation/native';
 import { hookstate, useHookstate, createState } from '@hookstate/core';
-import Castle11 from './Minigames/Castle11.js';
+import Castle from './Minigames/Castle.js';
 // .value: Gets the value of the state
 // .set(): Sets the value of the state
 
@@ -20,6 +20,7 @@ export default function Battle({ navigation, route }) {
     const healthState2 = useHookstate(health2);
     const [score, setScore] = useState(0)
     const [currentScreen, setScreen] = useState("battle")
+    let screen = undefined
 
     function changeScreen(screenName){
         setScreen(screenName)
@@ -43,6 +44,7 @@ export default function Battle({ navigation, route }) {
 
 
     if ( currentScreen == "battle"){
+        delete(<Castle/>)
     return (
         <View style={{
             width: MAXwidth, height: MAXheight, backgroundColor: '#404040',
@@ -73,12 +75,6 @@ export default function Battle({ navigation, route }) {
                 <Pressable style={styles.button} onPress={() => setScreen("castle")}>
                     <Text style={styles.text}>Castle</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => navigation.navigate("Matter")}>
-                    <Text style={styles.text}>MatterJS</Text>
-                </Pressable>
-                <Pressable style={styles.button} onPress={() => setScreen("castle11")}>
-                    <Text style={styles.text}>Castle11</Text>
-                </Pressable>
             </View>
 
 
@@ -105,16 +101,14 @@ export default function Battle({ navigation, route }) {
                 }
 
                 else if (currentScreen == 'dodge'){
-                    return <DodgeBall changeScreen = {changeScreen} 
+                    screen = <DodgeBall changeScreen = {changeScreen} 
                     setScore = {setScore}/>
+                    return screen
                 }
                 else if (currentScreen == 'castle'){
-                    return <BirdGame changeScreen = {changeScreen}
+                    screen = <Castle changeScreen = {changeScreen}
                     setScore = {setScore}/>
-                }
-                else if (currentScreen == 'castle11'){
-                    return <Castle11 changeScreen = {changeScreen}
-                    setScore = {setScore}/>
+                    return screen
                 }
 }
 
