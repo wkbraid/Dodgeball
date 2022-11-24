@@ -129,7 +129,7 @@ function createSlingshot() {
     }
   });
 
-  World.add(world, bird);
+  World.add(world, bird); 
   World.add(world, slingshot);
 }
 

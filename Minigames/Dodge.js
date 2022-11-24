@@ -39,7 +39,7 @@ class DodgeBall extends PureComponent {
       <View>
         <GameEngine
           systems={[this.gameLoop,]}
-          var entities={this.ents}>
+          entities={this.ents}>
           <KeyListeners />
         </GameEngine>
       </View>
@@ -62,6 +62,7 @@ class DodgeBall extends PureComponent {
     for (let id in entities) {
       entities[id].update()
     }
+    console.log("Dodge!")
 
     return entities
   }
