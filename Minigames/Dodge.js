@@ -29,8 +29,11 @@ class DodgeBall extends PureComponent {
     this.addEntity(new Circle(this));
     this.addEntity(new Grenade(this));
     this.addEntity(new Water(this))
-    setTimeout(() => {this.props.setScore(this.score); 
-    this.props.changeScreen('battle')} , 3000 )
+    setTimeout(() => {
+    this.props.setScore(this.score);
+    this.props.changeScreen('battle');
+    delete(this);
+  }, 3000 )
   }
 
 
@@ -58,7 +61,8 @@ class DodgeBall extends PureComponent {
   }
 
   //runs 60 times a second updating each entitiy
-  gameLoop(entities,) {
+  gameLoop(entities) {
+    console.log(entities)
     for (let id in entities) {
       entities[id].update()
     }
